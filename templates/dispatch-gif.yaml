@@ -1,0 +1,14 @@
+name: run create-gif workflow
+on: [push]
+
+jobs:
+  run-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: generate new gif
+          repo: claudiacachayosorio/demo-gifs
+          token: ${{ secrets.PERSONAL_TOKEN_TEST }}
+          inputs: '{ "repo": "PROJECT_REPO_HERE", "url": "LIVE_DEMO_URL_HERE" }'

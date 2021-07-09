@@ -29,5 +29,5 @@ jobs:
       - name: push new gif
         run: |
           git add -A
-          git commit -m "new version of stardew-mtl.gif"
+          git commit -m "new version of ${{ github.event.inputs.repo }}.gif"
           git push
