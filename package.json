@@ -1,0 +1,12 @@
+{
+  "name": "demo-gifs",
+  "scripts": {
+    "gif": "node scroll.js"
+  },
+  "dependencies": {
+    "get-pixels": "^3.3.2",
+    "gif-encoder": "^0.7.2",
+    "puppeteer": "^10.1.0"
+  },
+  "devDependencies": {}
+}
