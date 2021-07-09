@@ -1,5 +1,5 @@
-name: new gif
-on: [push]
+name: generate new gif
+on: [pull_request]
 
 jobs:
   create-gif:
@@ -12,7 +12,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: generate gif
+      - name: create gif
         run: |
           npm install
           npm run gif "stardew-mtl" "https://stardew-mtl.netlify.app/"
