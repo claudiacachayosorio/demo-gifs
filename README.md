@@ -4,4 +4,4 @@ Simple tool to generate an animated demo of a web page as a gif using Puppeteer 
 
 
 ## Commands
-**npm run gif <repo-name> <live-url>**
+**npm run gif [repo-name] [live-url]**
