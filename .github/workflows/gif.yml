@@ -1,4 +1,4 @@
-name: generate gif
+name: new gif
 on: [push]
 
 jobs:
