@@ -13,12 +13,12 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: generate gif
-      - run: |
+        run: |
           npm install
           npm run gif "stardew-mtl" "https://stardew-mtl.netlify.app/"
 
       - name: push new gif
-      - run: |
+        run: |
           git add -A
           git commit -m "new version of stardew-mtl.gif"
           git push
