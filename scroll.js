@@ -7,9 +7,9 @@ const fs			= require('fs');
 let fn	= process.argv[2];
 let url	= process.argv[3];
 
-// vertical length of each scroll in pixels
+// Vertical length of each scroll in pixels
 const scrollDepth = 100;
-// dimensions of screenshots
+// Dimensions of screenshots
 const viewport = {
 	width: 800,
 	height: 600
@@ -18,12 +18,15 @@ const viewport = {
 // Directories
 const outDir = './demos/';
 const outPath = `${outDir}${fn}.gif`;
-// temporary directory for PNGs
+// Temporary directory for PNGs
 const workDir = './temp/';
 
 // Create directories if inexistent
 if (!fs.existsSync(workDir)) fs.mkdirSync(workDir);
 if (!fs.existsSync(outDir))	 fs.mkdirSync(outDir);
+
+
+// Encoder
 
 const file = fs.createWriteStream(outPath);
 const encoder = new GIFencoder(viewport.width, viewport.height);
@@ -33,7 +36,11 @@ encoder.pipe(file);
 encoder.setQuality(40);
 encoder.setDelay(700);
 encoder.writeHeader();
+// Set infinite repeats
 encoder.setRepeat(0);
+
+
+// Function declaration
 
 function addToGif(images, counter = 0) {
 	getPixels(images[counter], (err, pixels) => {
@@ -55,9 +62,9 @@ function addToGif(images, counter = 0) {
 	});
 };
 
+// Remove temp files
 function cleanUp(listOfPNGs, cb) {
 	let i = listOfPNGs.length;
-
 	listOfPNGs.forEach(filepath => {
 		fs.unlink(filepath, err => {
 			--i;
@@ -68,20 +75,32 @@ function cleanUp(listOfPNGs, cb) {
 	});
 };
 
+
+// Run generator
+
 (async () => {
 
+	// Launch browser
 	const browser = await puppeteer.launch({ headless: true });
+	// Open page
 	const page = await browser.newPage();
+
+
+	// User interactions
 
 	async function scrollPage() {
 		await page.evaluate(async (scrollDepth) => {
 			window.scrollBy(0, scrollDepth);
+			// Stop at <param-2> pixels past starting point
 		}, scrollDepth);
 	};
 
-	await page.setViewport(viewport);
-	await page.goto(url);
 
+	// Screenshots dimensions
+	await page.setViewport(viewport);
+	// Open project live version
+	await page.goto(url);
+ 
 	const bodyHeight = await page.evaluate(() => document.body.clientHeight);
 	const numberOfPNGs = Math.floor(bodyHeight / scrollDepth);
 
