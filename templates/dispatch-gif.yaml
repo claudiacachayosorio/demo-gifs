@@ -10,5 +10,5 @@ jobs:
         with:
           workflow: generate new gif
           repo: claudiacachayosorio/demo-gifs
-          token: ${{ secrets.PERSONAL_TOKEN_TEST }}
+          token: ${{ secrets.PAT_DISPATCH_GIF }}
           inputs: '{ "repo": "PROJECT_REPO_HERE", "url": "LIVE_DEMO_URL_HERE" }'
