@@ -3,6 +3,15 @@
 Simple workflow to save a demo of a portfolio project every time it's deployed to GitHub. Generates a screencasting type gif of the live version using Puppeteer and automates the process using GitHub Actions. Based on this [prompt](https://www.codementor.io/projects/web/build-a-screenshot-pipeline-c22ccscro8) using this [tutorial](https://dev.to/aimerib/using-puppeteer-to-make-animated-gifs-of-page-scrolls-1lko) by [Aimeri Baddouh](https://www.slothcrew.com/).
 
 
-## Usage
+## Installation
 
-`npm run gif <repo-name> <site-url>`
+Fork this repository.
+
+[Create a personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token). Add it to the repo of the project you wish to create a gif for.
+
+If there's not one yet, create a directory named `workflows` inside another named `.github` at root level. Download the template `dispatch-gif.yaml` and move it to `.github/workflows`
+
+Change `workflow-dispatch` inputs according to commented guidelines and push to origin. From then on, it should trigger the workflows every time the local repo is deployed. You can check the `Actions` tab of both repos to watch the progress. A file named `PROJECT_REPO_NAME.gif` will be created inside `demos` directory of your fork and committed with the message `new PROJECT_REPO_NAME.gif`.
+
+To trigger the script manually, make sure you're at root level of `demo-gifs` and run this command:
+`npm run gif <repo> <url>` (same inputs as before)
