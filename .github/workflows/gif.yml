@@ -1,14 +1,14 @@
 name: generate new gif
 
-on: [pull_request]
-  #workflow_dispatch:
-    #inputs:
-      #repo:
-        #description: "Project repository name to be used for gif filename."
-        #required: true
-      #url:
-        #description: "URL of project live demo to be screencast as gif."
-        #required: true
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Project repository name to be used for gif filename."
+        required: true
+      url:
+        description: "URL of project live demo to be screencast as gif."
+        required: true
 
 jobs:
   create-gif:
@@ -24,7 +24,7 @@ jobs:
       - name: create gif
         run: |
           npm install
-          npm run gif "stardew-mtl" "https://stardew-mtl.netlify.app/"
+          npm run gif "${{ github.event.inputs.repo }}" "${{ github.event.inputs.url }}"
 
       - name: push new gif
         run: |
