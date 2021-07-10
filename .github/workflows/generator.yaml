@@ -31,4 +31,4 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: move gif to S3 bucket
-        run: aws s3 mv ./gifs/${{ github.event.inputs.repo }}.gif s3://${{ secrets.AWS_S3_BUCKET }}
+        run: aws s3 mv ${{ github.event.inputs.repo }}.gif s3://${{ secrets.AWS_S3_BUCKET }}

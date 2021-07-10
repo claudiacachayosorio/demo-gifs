@@ -15,20 +15,15 @@ const viewport = {
 	height: 600
 };
 
-// Directories
-const outDir = './gifs/';
-const outPath = `${outDir}${fn}.gif`;
 // Temporary directory for PNGs
 const workDir = './temp/';
-
-// Create directories if inexistent
+// create if inexistent
 if (!fs.existsSync(workDir)) fs.mkdirSync(workDir);
-if (!fs.existsSync(outDir))	 fs.mkdirSync(outDir);
 
 
 // Encoder
 
-const file = fs.createWriteStream(outPath);
+const file = fs.createWriteStream(`${fn}.gif`);
 const encoder = new GIFencoder(viewport.width, viewport.height);
 
 encoder.setFrameRate(5);
