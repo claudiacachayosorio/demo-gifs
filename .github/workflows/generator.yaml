@@ -16,8 +16,6 @@ jobs:
 
     steps:
       - name: checkout current repo
-        with:
-          ref: _s3
         uses: actions/checkout@v2
 
       - name: create gif
