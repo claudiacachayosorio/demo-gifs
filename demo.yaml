@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  dispatch-gif:
+  dispatch-generator:
     runs-on: ubuntu-latest
 
     steps:
