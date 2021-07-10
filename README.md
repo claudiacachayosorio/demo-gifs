@@ -10,8 +10,8 @@ Fork this repository. [Create a personal access token](https://docs.github.com/e
 If there's not one yet, create a directory named `workflows` inside another named `.github` at root level. Download the file `dispatch-gif.yaml` and move it to `.github/workflows`
 
 Make sure your repo has a `package.json` file with these fields filled out:
-`name`: project repo's name to be used for the gif filename
-`homepage`: url of live demo to screenshot and animate as a gif
+* `name`: project repo's name to be used for the gif filename
+* `homepage`: url of live demo to screenshot and animate as a gif
 
 Push the repo to origin. You can check the `Actions` tab of both repos to watch the progress. A file named `PROJECT_REPO_NAME.gif` will be created inside the `demos` directory of your fork and committed with the message `new PROJECT_REPO_NAME.gif`.
 
