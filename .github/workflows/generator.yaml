@@ -1,0 +1,36 @@
+name: generator
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Project repository name to be used for gif filename."
+        required: true
+      url:
+        description: "URL of project live demo to be screencast as gif."
+        required: true
+
+jobs:
+  create-gif:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout current repo
+        with:
+          ref: _s3
+        uses: actions/checkout@v2
+
+      - name: create gif
+        run: |
+          npm install
+          npm run gif ${{ github.event.inputs.repo }} ${{ github.event.inputs.url }}
+
+      - name: configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: move gif to S3 bucket
+        run: aws s3 mv ./gifs/${{ github.event.inputs.repo }}.gif s3://${{ secrets.AWS_S3_BUCKET }}

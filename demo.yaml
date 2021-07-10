@@ -1,4 +1,4 @@
-name: run create-gif workflow
+name: generate new demo
 on: [push]
 
 jobs:
@@ -13,10 +13,11 @@ jobs:
         uses: myrotvorets/info-from-package-json-action@1.0.0
         id: pkg
 
-      - name: dispatch create-gif with inputs
+      - name: dispatch generator with inputs
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: generate new gif
+          workflow: generator
           repo: claudiacachayosorio/demo-gifs
+          ref: _s3
           token: ${{ secrets.PAT_DISPATCH_GIF }}
           inputs: '{ "repo": "${{ steps.pkg.outputs.packageName }}", "url": "${{ steps.pkg.outputs.packageHomepage }}" }'

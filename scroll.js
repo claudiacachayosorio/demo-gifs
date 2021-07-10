@@ -16,7 +16,7 @@ const viewport = {
 };
 
 // Directories
-const outDir = './demos/';
+const outDir = './gifs/';
 const outPath = `${outDir}${fn}.gif`;
 // Temporary directory for PNGs
 const workDir = './temp/';
