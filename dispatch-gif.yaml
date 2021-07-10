@@ -2,15 +2,21 @@ name: run create-gif workflow
 on: [push]
 
 jobs:
-  run-commit:
+  dispatch-gif:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: benc-uk/workflow-dispatch@v1
+      - name: checkout current repo
+        uses: actions/checkout@v2
+
+      - name: get inputs from package.json
+        uses: myrotvorets/info-from-package-json-action@1.0.0
+        id: pkg
+
+      - name: dispatch create-gif with inputs
+        uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: generate new gif
-          repo: GITHUB_USERNAME_HERE/demo-gifs
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          inputs: '{ "repo": "PROJECT_REPO_HERE", "url": "LIVE_DEMO_URL_HERE" }'
-          # repo: Name of the project repository (my-project) to be used for gif filename.
-          # url:  URL of live demo to be made into a gif (https://my-project.woo/).
+          repo: claudiacachayosorio/demo-gifs
+          token: ${{ secrets.PAT_DISPATCH_GIF }}
+          inputs: '{ "repo": "${{ steps.pkg.outputs.packageName }}", "url": "${{ steps.pkg.outputs.packageHomepage }}" }'
