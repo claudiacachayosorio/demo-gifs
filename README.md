@@ -9,11 +9,11 @@ Fork this repository. [Create a personal access token](https://docs.github.com/e
 
 If there's not one yet, create a directory named `workflows` inside another named `.github` at root level of your project repo. Download the file `dispatch-gif.yaml` and move it to it. Make sure you replace `claudiacachayosorio/demo-gifs` with your own fork: `your-username/demo-gifs`
 
-Make sure there's a `package.json` file with these fields filled out:
+Still inside the project repo, make sure there's a `package.json` file with these fields filled out:
 * `name` project repo's name to be used for the gif filename
 * `homepage` url of live demo to screenshot and animate as a gif
 
-Push the repo to origin. You can check the **Actions** tab of both repos to watch the progress. From then on, `[name].gif` will be generated inside the `demos` directory of your fork every time the corresponding project repo is deployed. Repeat for each repository with a live web page you want to showcase with a gif.
+Deploy all changes. You can check the **Actions** tab of both repos to watch the progress. From then on, `[name].gif` will be generated inside the `demos` directory of your fork every time the corresponding project repo is pushed to origin. Repeat for each repository with a live web page you want to showcase with a gif.
 
 To trigger the script manually, make sure you're at the forked repo's root level and run this command:
 ````
