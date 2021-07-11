@@ -21,9 +21,9 @@ Create a [personal access token](https://docs.github.com/en/github/authenticatin
 
 If there's not one yet, create a directory named `workflows` inside another named `.github` at root level of the project repo. Download the file `demo.yaml` and move it to there. Make sure you replace my username with your own.
 
-To get the inputs, your project repo should have a `package.json` file with the following fields filled out:
+To get the necessary inputs for the generator, your project repo should have a `package.json` file with the following fields filled out:
 * `name` project repo's name to be used for the gif filename
-* `homepage` url of live demo to screenshot and animate as a gif
+* `homepage` url of the live demo to take screenshots and animate as a gif
 
 Deploy all changes. You can check the **Actions** tab of both repos to watch the progress. From then on, `[name].gif` will be generated inside the `demos` directory of your fork every time the corresponding project repo is pushed to origin. Repeat for each repository with a live web page you want to showcase with a gif.
 
