@@ -1,7 +1,8 @@
 {
   "name": "demo-gifs",
   "scripts": {
-    "gif": "node scroll.js"
+    "gif": "node scroll.js",
+    "test": "npm run gif stardew-mtl https://stardew-mtl.netlify.app/"
   },
   "dependencies": {
     "get-pixels": "^3.3.2",

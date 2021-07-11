@@ -82,7 +82,6 @@ function cleanUp(listOfPNGs, cb) {
 
 
 	// User interactions
-
 	async function scrollPage() {
 		await page.evaluate(async (scrollDepth) => {
 			window.scrollBy(0, scrollDepth);
@@ -91,7 +90,7 @@ function cleanUp(listOfPNGs, cb) {
 	};
 
 
-	// Screenshots dimensions
+	// Set screenshots dimensions
 	await page.setViewport(viewport);
 	// Open project live version
 	await page.goto(url);
@@ -112,7 +111,7 @@ function cleanUp(listOfPNGs, cb) {
 		.map(a => a.substr(0, a.length - 4) + '')
 		.sort((a, b) => a - b)
 		.map(a => workDir + a.substr(0, a.length) + '.png');
-	
+
 	addToGif(listOfPNGs);
 
 })();
