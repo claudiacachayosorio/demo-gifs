@@ -10,3 +10,9 @@ jobs:
 
     steps:
       - run: sudo apt-get install imagemagick ttyrec gcc x11-apps make git
+      - uses: actions/checkout@v2
+        with:
+          repository: claudiacachayosorio/ttygif
+      - run: |
+          make
+          sudo make install
