@@ -1,0 +1,12 @@
+name: terminal
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  terminal:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: sudo apt-get install imagemagick ttyrec gcc x11-apps make git
