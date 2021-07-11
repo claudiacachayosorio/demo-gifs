@@ -1,5 +1,5 @@
 # demo gifs
-![generator](https://github.com/claudiacachayosorio/demo-gifs/actions/workflows/generator.yaml/badge.svg)
+[![generator][workflow]][workflow-url]
 
 Simple pipeline to create an animated demo of a portfolio project every time it's deployed to GitHub. Script generates a screencasting type gif of the live version using Puppeteer and Node.js. The GitHub Actions workflow saves it to an Amazon S3 bucket. Based on this [prompt](https://www.codementor.io/projects/web/build-a-screenshot-pipeline-c22ccscro8) using this [tutorial](https://dev.to/aimerib/using-puppeteer-to-make-animated-gifs-of-page-scrolls-1lko) by [Aimeri Baddouh](https://www.slothcrew.com/).
 
@@ -32,3 +32,9 @@ Deploy all changes. You can check the **Actions** tab of both repos to watch the
 ````
 npm run gif [name] [homepage]
 ````
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
+
+[workflow]: https://github.com/claudiacachayosorio/demo-gifs/actions/workflows/generator.yaml/badge.svg
+[workflow-url]: https://github.com/claudiacachayosorio/demo-gifs/actions/workflows/generator.yaml
