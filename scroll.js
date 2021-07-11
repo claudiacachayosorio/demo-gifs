@@ -11,8 +11,8 @@ let url	= process.argv[3];
 const scrollDepth = 100;
 // Dimensions of screenshots
 const viewport = {
-	width: 800,
-	height: 600
+	width: 700,
+	height: 400
 };
 
 // Temporary directory for PNGs
