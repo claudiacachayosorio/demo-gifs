@@ -1,7 +1,7 @@
 # demo-gifs
 [![generator][workflow]][workflow-url]
 
-Simple pipeline to create an animated demo of a portfolio project every time it's deployed. Built with Node.js and GitHub Actions. Generates a screencasting type gif of the homepage and saves it to an Amazon S3 bucket. Based on this [prompt](https://www.codementor.io/projects/web/build-a-screenshot-pipeline-c22ccscro8) using this [tutorial](https://dev.to/aimerib/using-puppeteer-to-make-animated-gifs-of-page-scrolls-1lko) by [Aimeri Baddouh](https://www.slothcrew.com/).
+Simple pipeline to create an animated demo of a portfolio project every time it's deployed. Generates a screencasting type gif of the homepage and saves it to an Amazon S3 bucket. Built with Node.js and GitHub Actions, based on [this prompt](https://www.codementor.io/projects/web/build-a-screenshot-pipeline-c22ccscro8) using [this tutorial](https://dev.to/aimerib/using-puppeteer-to-make-animated-gifs-of-page-scrolls-1lko) by [Aimeri Baddouh](https://www.slothcrew.com/).
 
 
 ## Installation
