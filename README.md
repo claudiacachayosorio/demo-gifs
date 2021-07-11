@@ -25,7 +25,7 @@ To get the necessary inputs for the generator, your project repo should have a `
 * `name` project repo's name to be used for the gif filename
 * `homepage` url of the live demo to take screenshots and animate as a gif
 
-Deploy all changes. You can check the **Actions** tab of both repos to watch the progress. From then on, `[name].gif` will be generated inside the `demos` directory of your fork every time the corresponding project repo is pushed to origin. Repeat for each repository with a live web page you want to showcase with a gif.
+Deploy all changes. You can check the **Actions** tab of both repos to watch the progress. From then on, `[name].gif` will be saved to your S3 bucket every time the corresponding project repo is pushed to origin. Repeat for each repository with a live web page you want to showcase.
 
 
 ## Commands
