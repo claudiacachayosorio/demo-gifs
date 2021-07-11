@@ -14,5 +14,5 @@ jobs:
         with:
           workflow: generator
           repo: claudiacachayosorio/demo-gifs
-          token: ${{ secrets.PAT_DISPATCH_GIF }}
+          token: ${{ secrets.DEMO_TOKEN }}
           inputs: '{ "repo": "${{ github.repository }}" }'

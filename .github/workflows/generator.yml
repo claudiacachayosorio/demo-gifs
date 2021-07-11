@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       repo:
-        description: "Project repository to get generator inputs."
+        description: "Project repository that dispatched this workflow."
         required: true
 
 jobs:
@@ -37,4 +37,4 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: move gif to S3 bucket
-        run: aws s3 mv ${{ steps.pkg.outputs.packageName }}.gif s3://${{ secrets.AWS_S3_BUCKET }}
+        run: aws s3 mv ${{ steps.pkg.outputs.packageName }}.gif s3://${{ secrets.AWS_S3_BUCKET }} --acl public-read

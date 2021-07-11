@@ -28,7 +28,7 @@ const encoder = new GIFencoder(viewport.width, viewport.height);
 
 encoder.setFrameRate(5);
 encoder.pipe(file);
-encoder.setQuality(40);
+encoder.setQuality(1);
 encoder.setDelay(700);
 encoder.writeHeader();
 // Set infinite repeats
