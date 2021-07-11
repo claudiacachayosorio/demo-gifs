@@ -1,0 +1,15 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "PutObjectsInBucket",
+			"Effect": "Allow",
+			"Action": [
+				"s3:PutObject",
+				"s3:PutObjectVersionAcl",
+				"s3:PutObjectAcl"
+			],
+			"Resource": "arn:aws:s3:::bucket-name/*"
+		}
+	]
+}
