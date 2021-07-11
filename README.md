@@ -49,3 +49,4 @@ npm run start [name] [homepage]
 
 [workflow]: https://github.com/claudiacachayosorio/demo-gifs/actions/workflows/generator.yaml/badge.svg
 [workflow-url]: https://github.com/claudiacachayosorio/demo-gifs/actions/workflows/generator.yaml
+
