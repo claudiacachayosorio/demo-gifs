@@ -18,4 +18,9 @@ jobs:
           sudo make install
 
       - uses: actions/checkout@v2
-      - run: ls
+      - run: ttyrec demo-recording
+      - run: |
+          npm install
+          npm run start example https://en.wikipedia.org/wiki/Chinchilla
+      - run: exit
+      - run: ttygif demo-recording
