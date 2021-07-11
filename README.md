@@ -6,10 +6,8 @@ Simple pipeline to create an animated demo of a portfolio project every time it'
 
 ## Installation
 
-### S3 bucket
-Create an [S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html).
-
-In the IAM console, first create a policy using this [template](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_s3_rw-bucket.html). Next, create an [IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) for this workflow and assign the newly created policy to it. Make sure you choose programmatic access as type of credentials.
+### AWS setup
+Create an [S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html). In the IAM console, first create a policy using this [template](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_s3_rw-bucket.html). Next, create an [IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) for this workflow and assign the newly created policy to it. Make sure you choose programmatic access as type of credentials.
 
 ### Generator
 Fork this repository. In the **Settings** tab, create the following [action secrets](https://github.com/claudiacachayosorio/demo-gifs/settings/secrets/actions) using the IAM user credentials:
