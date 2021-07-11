@@ -1,7 +1,7 @@
-# demo gifs
+# demo-gifs
 [![generator][workflow]][workflow-url]
 
-Simple pipeline to create an animated demo of a portfolio project every time it's deployed. Built with Node.js and GitHub Actions. Generates a screencasting type gif of the live version and saves it to an Amazon S3 bucket. Based on this [prompt](https://www.codementor.io/projects/web/build-a-screenshot-pipeline-c22ccscro8) using this [tutorial](https://dev.to/aimerib/using-puppeteer-to-make-animated-gifs-of-page-scrolls-1lko) by [Aimeri Baddouh](https://www.slothcrew.com/).
+Simple pipeline to create an animated demo of a portfolio project every time it's deployed. Built with Node.js and GitHub Actions. Generates a screencasting type gif of the homepage and saves it to an Amazon S3 bucket. Based on this [prompt](https://www.codementor.io/projects/web/build-a-screenshot-pipeline-c22ccscro8) using this [tutorial](https://dev.to/aimerib/using-puppeteer-to-make-animated-gifs-of-page-scrolls-1lko) by [Aimeri Baddouh](https://www.slothcrew.com/).
 
 
 ## Installation
@@ -10,7 +10,7 @@ Simple pipeline to create an animated demo of a portfolio project every time it'
 Create an [S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html). In the IAM console, first create a policy using this [template](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_s3_rw-bucket.html). Next, create an [IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) for this workflow and assign the newly created policy to it. Make sure you choose programmatic access as type of credentials.
 
 ### Generator
-Fork this repository. In the **Settings** tab, create the following [action secrets](https://github.com/claudiacachayosorio/demo-gifs/settings/secrets/actions) using the IAM user credentials:
+Fork this repository. In the **Settings** tab, create the following [action secrets](https://github.com/claudiacachayosorio/demo-gifs/settings/secrets/actions) using the IAM credentials:
 * `AWS_ACCESS_KEY_ID`
 * `AWS_SECRET_ACCESS_KEY`
 
@@ -35,6 +35,7 @@ npm run gif [name] [homepage]
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
+
 
 [workflow]: https://github.com/claudiacachayosorio/demo-gifs/actions/workflows/generator.yaml/badge.svg
 [workflow-url]: https://github.com/claudiacachayosorio/demo-gifs/actions/workflows/generator.yaml
