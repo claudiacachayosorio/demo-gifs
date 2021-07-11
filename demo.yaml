@@ -5,21 +5,17 @@ on:
     branches: [main]
 
 jobs:
-  dispatch-generator:
+  demo:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout current repo
+      - name: checkout repo
         uses: actions/checkout@v2
 
-      - name: get inputs from package.json
-        uses: myrotvorets/info-from-package-json-action@1.0.0
-        id: pkg
-
-      - name: dispatch generator with inputs
+      - name: dispatch generator
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: generator
           repo: claudiacachayosorio/demo-gifs
           token: ${{ secrets.PAT_DISPATCH_GIF }}
-          inputs: '{ "repo": "${{ steps.pkg.outputs.packageName }}", "url": "${{ steps.pkg.outputs.packageHomepage }}" }'
+          inputs: '{ "repo": "${{ github.repository }}" }'

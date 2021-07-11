@@ -4,24 +4,30 @@ on:
   workflow_dispatch:
     inputs:
       repo:
-        description: "Project repository name to be used for gif filename."
-        required: true
-      url:
-        description: "URL of project live demo to be screencast as gif."
+        description: "Project repository to get generator inputs."
         required: true
 
 jobs:
-  create-gif:
+  generator:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout current repo
+      - name: checkout project repo
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.inputs.repo }}
+
+      - name: store inputs from package.json
+        uses: myrotvorets/info-from-package-json-action@1.0.0
+        id: pkg
+
+      - name: checkout generator repo
         uses: actions/checkout@v2
 
       - name: create gif
         run: |
           npm install
-          npm run gif ${{ github.event.inputs.repo }} ${{ github.event.inputs.url }}
+          npm run gif ${{ steps.pkg.outputs.packageName }} ${{ steps.pkg.outputs.packageHomepage }}
 
       - name: configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -31,4 +37,4 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: move gif to S3 bucket
-        run: aws s3 mv ${{ github.event.inputs.repo }}.gif s3://${{ secrets.AWS_S3_BUCKET }}
+        run: aws s3 mv ${{ steps.pkg.outputs.packageName }}.gif s3://${{ secrets.AWS_S3_BUCKET }}
