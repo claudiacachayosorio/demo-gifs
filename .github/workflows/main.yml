@@ -13,9 +13,12 @@ jobs:
         with:
           node-version: '14.12.0'
 
+      - run: apt-get install xdotool
+
       - run: npm install -g terminalizer
       - run: terminalizer init
       - run: terminalizer record test
+      - run: xdotool key ctrl+c
 
       #- run: |
           #npm install
