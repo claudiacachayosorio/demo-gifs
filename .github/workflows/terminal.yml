@@ -16,8 +16,6 @@ jobs:
       - run: |
           make
           sudo make install
-      - run: sudo apt-get install xdotool
-      - run: export WINDOWID=$(xdotool getwindowfocus)
 
       - uses: actions/checkout@v2
       - run: ttyrec demo-recording
@@ -25,4 +23,6 @@ jobs:
           npm install
           npm run start example https://en.wikipedia.org/wiki/Chinchilla
       - run: exit
+      - run: sudo apt-get install xdotool
+      - run: export WINDOWID=$(xdotool getwindowfocus)
       - run: ttygif demo-recording
