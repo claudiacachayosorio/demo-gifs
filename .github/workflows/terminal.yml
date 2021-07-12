@@ -17,13 +17,13 @@ jobs:
           make
           sudo make install
 
-      - uses: actions/checkout@v2
-      - run: sudo apt-get install xdotool
-      - run: export WINDOWID=$(xdotool getwindowfocus)
+      #- uses: actions/checkout@v2
+      #- run: sudo apt-get install xdotool
+      - run: xdotool getwindowfocus
 
-      - run: ttyrec demo-recording
-      - run: |
-          npm install
-          npm run start example https://en.wikipedia.org/wiki/Chinchilla
-      - run: exit
-      - run: ttygif demo-recording
+      #- run: ttyrec demo-recording
+      #- run: |
+          #npm install
+          #npm run start example https://en.wikipedia.org/wiki/Chinchilla
+      #- run: exit
+      #- run: ttygif demo-recording
