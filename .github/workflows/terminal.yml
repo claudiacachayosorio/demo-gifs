@@ -10,6 +10,9 @@ jobs:
 
     steps:
       - run: |
+          cd ../..
+          pwd
+          ls
           cd ..
           pwd
           ls
