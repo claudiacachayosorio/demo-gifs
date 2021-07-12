@@ -10,6 +10,4 @@ jobs:
 
     steps:
       - name: install gifsicle
-        run: |
-          ./configure
-          make
+        run: ls
