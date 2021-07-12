@@ -1,0 +1,30 @@
+name: terminal
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  terminal:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2
+
+      - run: autoreconf -i
+      - run: ./configure
+
+      #- name: install asciinema
+        #run: sudo pip3 install asciinema
+
+      #- name: start recording
+        #run: asciinema rec demo.cast
+
+      #- name: run demo
+        #run: |
+          #npm i
+          #npm run demo
+
+      #- name: stop recording
+        #run: exit

@@ -26,7 +26,7 @@ jobs:
 
       - name: create gif
         run: |
-          npm install
+          npm i
           npm run start ${{ steps.pkg.outputs.packageName }} ${{ steps.pkg.outputs.packageHomepage }}
 
       - name: configure AWS credentials
