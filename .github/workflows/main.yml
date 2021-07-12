@@ -14,4 +14,9 @@ jobs:
 
       - name: checkout repo
         uses: actions/checkout@v2
-      - run: ls
+        with:
+          path: asciicast2gif
+
+      - run: |
+          pwd
+          ls
