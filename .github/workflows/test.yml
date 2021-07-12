@@ -1,0 +1,15 @@
+name: terminal
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  terminal:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: install gifsicle
+        run: |
+          ./configure
+          make
