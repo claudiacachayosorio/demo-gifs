@@ -14,4 +14,4 @@ jobs:
 
       - run: autoscan
       - run: mv ./configure.scan ./configure.ac
-      - run: ls
+      - run: autoreconf -i
