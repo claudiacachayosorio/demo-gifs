@@ -9,12 +9,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: install softwares
+      - name: install software
         run: |
-          sudo pip3 install asciinema
+          git clone https://github.com/asciinema/asciinema.git
 
       - name: checkout repo
         uses: actions/checkout@v2
+        with:
+          path: asciinema
 
       - name: setup node
         uses: actions/setup-node@v2
@@ -23,12 +25,17 @@ jobs:
 
       - name: start recording
         run: asciinema rec demo.cast
+        working-directory: asciinema
 
       - name: run demo
         run: |
           npm install
           npm run demo
+        working-directory: asciinema
 
       - name: stop recording
         run: exit
+        working-directory: asciinema
+  
       - run: ls
+        working-directory: asciinema
