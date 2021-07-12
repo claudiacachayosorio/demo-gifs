@@ -10,17 +10,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          repository: claudiacachayosorio/terminalizer
+
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-      #- run: sudo apt-get install xdotool
 
-      - run: npm install -g terminalizer
-      - run: |
-          cd terminalizer
-          pwd
-          ls
-      #- run: terminalizer init
+      #- run: sudo apt-get install xdotool
+      - run: terminalizer init
       #- run: terminalizer record test
       #- run: xdotool key ctrl+d
 
