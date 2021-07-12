@@ -9,14 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: curl -sL http://www.lcdf.org/gifsicle/gifsicle-1.93.tar.gz | tar -zx
+      - uses: actions/checkout@v2
+        with:
+          repository: kohler/gifsicle
       - run: pwd
 
-      - run: |
-          cd gifsicle-1.93
-          pwd
-          ls
-          autoscan
+      - run: ./configure
 
       #- run: |
           #cd gifsicle-1.93
