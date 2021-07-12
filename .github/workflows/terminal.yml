@@ -10,8 +10,12 @@ jobs:
 
     steps:
       - run: |
-          ../
+          cd ../
           pwd
+          ls
+          cd ../
+          pwd
+          ls
       #- uses: actions/checkout@v2
         #with:
           #repository: kohler/gifsicle
