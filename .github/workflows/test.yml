@@ -9,5 +9,4 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: install gifsicle
-        run: ls
+      - run: ./configure make
