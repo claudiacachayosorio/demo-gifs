@@ -1,8 +1,7 @@
 {
   "name": "demo-gifs",
   "scripts": {
-    "start browser": "node scroll.js",
-    "start terminal": "",
+    "start": "node scroll.js",
     "demo": "npm run start demo https://en.wikipedia.org/wiki/Chinchilla"
   },
   "dependencies": {

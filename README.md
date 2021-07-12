@@ -1,7 +1,7 @@
 # demo-gifs
 [![generator][workflow]][workflow-url]
 
-Simple pipeline to create an animated demo of a project every time it's deployed. Generates a screencasting type gif of the homepage and saves it to an Amazon S3 bucket. Built with Node.js and GitHub Actions, based on [this prompt](https://www.codementor.io/projects/web/build-a-screenshot-pipeline-c22ccscro8) and using [this tutorial](https://dev.to/aimerib/using-puppeteer-to-make-animated-gifs-of-page-scrolls-1lko) by [Aimeri Baddouh](https://www.slothcrew.com/).
+Simple pipeline to create an animated demo of a project every time it's deployed. Generates a screencasting type gif of the homepage and saves it to an Amazon S3 bucket. Built with Node.js and GitHub Actions, based on [this prompt](https://www.codementor.io/projects/web/build-a-screenshot-pipeline-c22ccscro8) using [this tutorial](https://dev.to/aimerib/using-puppeteer-to-make-animated-gifs-of-page-scrolls-1lko) by [Aimeri Baddouh](https://www.slothcrew.com/).
 
 ## Installation
 
@@ -18,15 +18,21 @@ Fork this repository. In the **Settings** tab, create the following [secrets](ht
 * `AWS_ACCESS_KEY_ID`
 * `AWS_SECRET_ACCESS_KEY`
 
-I also added the S3 bucket name and region as secrets under `AWS_S3_BUCKET` and `AWS_REGION`, but it's optional. If you don't, replace them for the actual values in the `demo.yml` template.
+Replace the following values:
+````yaml
+# demo-gifs/.github/workflows/generator.yml
+aws-region: us-east-1 # bucket's AWS region
+run: [...] s3://cco-demo-gifs --acl public-read # s3://bucket-name
+
+# demo-gifs/templates/demo.yml
+repo: claudiacachayosorio/demo-gifs # username/demo-gifs
+````
+
 
 ### Project workflow
 Create a [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token). Add it as a secret to the repository of the project you want to create a gif for.
 
-If there's not one yet, create a directory named `workflows` inside another named `.github` at root level of the project repository. Download the template `demo.yml` and move it to there. Don't forget to swap in your GitHub username in the following line:
-````yaml
-repo: claudiacachayosorio/demo-gifs
-````
+Add a copy of `demo.yml` to the following path: `project-repo/.github/workflows/demo.yml`
 
 To get the necessary inputs for the generator, your project should have a `package.json` file with the following fields filled out:
 * `name` project repository's name to be used for the gif filename
@@ -35,7 +41,7 @@ To get the necessary inputs for the generator, your project should have a `packa
 Deploy all changes. You can check the **Actions** tab of both repositories to watch the progress. From then on, `[name].gif` will be saved to your S3 bucket every time the corresponding project repository is pushed to origin. Repeat for each project with a live web page you want to showcase.
 
 
-## Commands
+## Usage
 ````
 npm run start [name] [homepage]
 ````
