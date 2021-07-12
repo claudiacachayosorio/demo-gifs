@@ -10,13 +10,15 @@ jobs:
 
     steps:
       - name: install software
-        run: |
-          git clone https://github.com/asciinema/asciinema.git
+        uses: actions/checkout@v2
+        with:
+          repository: asciinema/asciinema
 
       - name: checkout repo
         uses: actions/checkout@v2
         with:
           path: asciinema
+      - run: ls
 
       - name: setup node
         uses: actions/setup-node@v2
@@ -24,7 +26,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: start recording
-        run: asciinema rec demo.cast
+        run: python3 -m asciinema demo.cast
         working-directory: asciinema
 
       - name: run demo
