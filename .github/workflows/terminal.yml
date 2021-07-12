@@ -12,11 +12,24 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v2
 
-      - run: curl -sL http://www.lcdf.org/gifsicle/gifsicle-1.91.tar.gz | tar -zx
+      - run: curl -sL http://www.lcdf.org/gifsicle/gifsicle-1.93.tar.gz | tar -zx
+
       - run: |
+          cd gifsicle-1.91
           autoscan
+
+      - run: |
+          cd gifsicle-1.91
           mv ./configure.scan ./configure.ac
+
+      - run: |
+          cd gifsicle-1.91
           autoreconf -i
+
+      - run: |
+          cd gifsicle-1.91
           ./configure
+
+      - run: |
+          cd gifsicle-1.91
           make install
-        working-directory: gifsicle-1.91
