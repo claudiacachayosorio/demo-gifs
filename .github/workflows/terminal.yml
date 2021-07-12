@@ -15,3 +15,4 @@ jobs:
       - run: autoscan
       - run: mv ./configure.scan ./configure.ac
       - run: autoreconf -i
+      - run: ./configure
