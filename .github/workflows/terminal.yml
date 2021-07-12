@@ -10,10 +10,10 @@ jobs:
 
     steps:
       - run: |
-          cd ../
+          cd ..
           pwd
           ls
-          cd ../
+          cd ..
           pwd
           ls
       #- uses: actions/checkout@v2
