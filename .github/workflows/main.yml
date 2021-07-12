@@ -7,20 +7,19 @@ on:
 jobs:
   terminal:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: asciicast2gif
 
     steps:
       - name: install asciicast2gif
         run: git clone --recursive https://github.com/asciinema/asciicast2gif.git
-        working-directory: demo-gifs
 
       - name: checkout repo
         uses: actions/checkout@v2
-        #with:
-          #path: asciicast2gif
+        with:
+          path: asciicast2gif
 
       - run: |
+          pwd
+          ls
+          cd asciicast2gif
           pwd
           ls
