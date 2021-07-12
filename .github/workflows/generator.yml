@@ -24,17 +24,22 @@ jobs:
       - name: checkout generator repo
         uses: actions/checkout@v2
 
+      - name: set up node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
       - name: create gif
         run: |
-          npm i
-          npm run start ${{ steps.pkg.outputs.packageName }} ${{ steps.pkg.outputs.packageHomepage }}
+          npm install
+          npm run start browser ${{ steps.pkg.outputs.packageName }} ${{ steps.pkg.outputs.packageHomepage }}
 
       - name: configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: us-east-1
 
       - name: move gif to S3 bucket
-        run: aws s3 mv ${{ steps.pkg.outputs.packageName }}.gif s3://${{ secrets.AWS_S3_BUCKET }} --acl public-read
+        run: aws s3 mv ${{ steps.pkg.outputs.packageName }}.gif s3://cco-demo-gifs --acl public-read

@@ -12,19 +12,24 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v2
 
-      - run: autoreconf -i
-      - run: ./configure
+      - name: setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: {{ matrix.node }}
 
-      #- name: install asciinema
-        #run: sudo pip3 install asciinema
+      - name: install gifsicle
+        run: sudo apt-get install gifsicle
 
-      #- name: start recording
-        #run: asciinema rec demo.cast
+      - name: install asciinema
+        run: sudo pip3 install asciinema
 
-      #- name: run demo
-        #run: |
-          #npm i
-          #npm run demo
+      - name: start recording
+        run: asciinema rec demo.cast
 
-      #- name: stop recording
-        #run: exit
+      - name: run demo
+        run: |
+          npm install
+          npm run demo
+
+      - name: stop recording
+        run: exit
