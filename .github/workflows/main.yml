@@ -12,12 +12,9 @@ jobs:
         working-directory: asciicast2gif
 
     steps:
-      - run: |
-          pwd
-          ls
-
       - name: install asciicast2gif
         run: git clone --recursive https://github.com/asciinema/asciicast2gif.git
+        working-directory: demo-gifs
 
       - name: checkout repo
         uses: actions/checkout@v2
