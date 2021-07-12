@@ -12,7 +12,9 @@ jobs:
       - name: install softwares
         run: |
           git clone --recursive https://github.com/asciinema/asciicast2gif.git
-          sudo pip3 install asciinema
+          sudo apt-add-repository ppa:zanchey/asciinema
+          sudo apt-get update
+          sudo apt-get install asciinema
           sudo apt-get install gifsicle
 
       - name: checkout repo
