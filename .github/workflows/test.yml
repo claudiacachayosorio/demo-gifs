@@ -9,4 +9,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: ./configure make
+      - run: autoreconf -i
+      - run: ./configure
