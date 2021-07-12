@@ -9,16 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: |
-          cd ../..
-          pwd
-          ls
-          cd ..
-          pwd
-          ls
-          cd ..
-          pwd
-          ls
+      - run: sudo apt-get install gifsicle
       #- uses: actions/checkout@v2
         #with:
           #repository: kohler/gifsicle
