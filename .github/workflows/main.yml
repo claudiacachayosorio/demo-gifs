@@ -9,20 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v2
-
-      - name: setup node
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: install asciinema
-        run: sudo pip3 install asciinema
-
-      - name: install gifsicle
-        run: sudo apt-get install gifsicle
-
       - name: install asciicast2gif
         run: git clone --recursive https://github.com/asciinema/asciicast2gif.git
+
+      - name: checkout repo
+        uses: actions/checkout@v2
       - run: ls
