@@ -13,12 +13,16 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-      - run: sudo apt-get install xdotool
+      #- run: sudo apt-get install xdotool
 
       - run: npm install -g terminalizer
-      - run: terminalizer init
-      - run: terminalizer record test
-      - run: xdotool key ctrl+c
+      - run: |
+          cd terminalizer
+          pwd
+          ls
+      #- run: terminalizer init
+      #- run: terminalizer record test
+      #- run: xdotool key ctrl+d
 
       #- run: |
           #npm install
