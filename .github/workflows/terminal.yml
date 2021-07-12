@@ -9,10 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          repository: kohler/gifsicle
+      - run: |
+          ../
+          pwd
+      #- uses: actions/checkout@v2
+        #with:
+          #repository: kohler/gifsicle
 
-      - run: autoreconf -i
-      - run: ./configure
-      - run: make install
+      #- run: autoreconf -i
+      #- run: ./configure
+      #- run: make install
