@@ -13,4 +13,5 @@ jobs:
         uses: actions/checkout@v2
 
       - run: autoscan
+      - run: mv ./configure.scan ./configure.ac
       - run: ls
