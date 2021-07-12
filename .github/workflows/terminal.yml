@@ -15,21 +15,22 @@ jobs:
       - run: |
           cd gifsicle-1.93
           pwd
+          ls
           autoscan
 
-      - run: |
-          cd gifsicle-1.93
-          pwd
-          mv ./configure.scan ./configure.ac
+      #- run: |
+          #cd gifsicle-1.93
+          #pwd
+          #mv ./configure.scan ./configure.ac
 
-      - run: |
-          cd gifsicle-1.93
-          autoreconf -i
+      #- run: |
+          #cd gifsicle-1.93
+          #autoreconf -i
 
-      - run: |
-          cd gifsicle-1.93
-          ./configure
+      #- run: |
+          #cd gifsicle-1.93
+          #./configure
 
-      - run: |
-          cd gifsicle-1.93
-          make install
+      #- run: |
+          #cd gifsicle-1.93
+          #make install
