@@ -9,17 +9,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: install asciicast2gif
-        run: git clone --recursive https://github.com/asciinema/asciicast2gif.git
+      - name: install softwares
+        run: |
+          sudo pip3 install asciinema
+          sudo apt-get install gifsicle
+          git clone --recursive https://github.com/asciinema/asciicast2gif.git
 
       - name: checkout repo
         uses: actions/checkout@v2
         with:
           path: asciicast2gif
 
-      - run: |
-          pwd
-          ls
-          cd asciicast2gif
-          pwd
-          ls
+      - name: setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: start recording
+        run: asciinema rec demo.cast
+        working-directory: asciicast2gif
+
+      - name: run demo
+        run: |
+          npm install
+          npm run demo
+        working-directory: asciicast2gif
+
+      - name: stop recording
+        run: exit
+        working-directory: asciicast2gif
+      - run: ls
