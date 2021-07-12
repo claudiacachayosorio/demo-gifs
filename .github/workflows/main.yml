@@ -14,11 +14,11 @@ jobs:
           node-version: '14.12.0'
 
       - run: npm install -g terminalizer
-      - run: terminalizer record test
+      - run: terminalizer --help
 
-      - run: |
-          npm install
-          npm run demo
+      #- run: |
+          #npm install
+          #npm run demo
 
-      - run: terminalizer render test
-      - run: ls
+      #- run: terminalizer render test
+      #- run: ls
