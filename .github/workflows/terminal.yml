@@ -9,18 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v2
-
       - run: curl -sL http://www.lcdf.org/gifsicle/gifsicle-1.93.tar.gz | tar -zx
-      - run: ls
+      - run: pwd
 
       - run: |
           cd gifsicle-1.93
+          pwd
           autoscan
 
       - run: |
           cd gifsicle-1.93
+          pwd
           mv ./configure.scan ./configure.ac
 
       - run: |
