@@ -9,35 +9,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: install software
-        uses: actions/checkout@v2
-        with:
-          repository: asciinema/asciinema
-
-      - name: checkout repo
-        uses: actions/checkout@v2
-        with:
-          path: asciinema
-      - run: ls
-
-      - name: setup node
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
 
-      - name: start recording
-        run: python3 -m asciinema demo.cast
-        working-directory: asciinema
+      - run: npm install -g terminalizer
+      - run: terminalizer record test
 
-      - name: run demo
-        run: |
+      - run: |
           npm install
           npm run demo
-        working-directory: asciinema
 
-      - name: stop recording
-        run: exit
-        working-directory: asciinema
-  
+      - run: terminalizer render test
       - run: ls
-        working-directory: asciinema
