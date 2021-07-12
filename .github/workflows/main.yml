@@ -24,17 +24,5 @@ jobs:
         run: sudo apt-get install gifsicle
 
       - name: install asciicast2gif
-        run: npm install --global asciicast2gif
-
-      - name: start recording
-        run: asciinema rec demo.cast
-
-      - name: run demo
-        run: |
-          npm install
-          npm run demo
-
-      - name: stop recording
-        run: exit
-
+        run: git clone --recursive https://github.com/asciinema/asciicast2gif.git
       - run: ls
