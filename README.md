@@ -3,6 +3,7 @@
 
 Simple pipeline to create an animated demo of a project every time it's deployed. Generates a screencasting type gif of the homepage and saves it to an Amazon S3 bucket. Built with Node.js and GitHub Actions, based on [this prompt](https://www.codementor.io/projects/web/build-a-screenshot-pipeline-c22ccscro8) using [this tutorial](https://dev.to/aimerib/using-puppeteer-to-make-animated-gifs-of-page-scrolls-1lko) by [Aimeri Baddouh](https://www.slothcrew.com/).
 
+
 ## Installation
 
 ### AWS setup
@@ -27,7 +28,6 @@ run: [...] s3://cco-demo-gifs --acl public-read # s3://bucket-name
 # demo-gifs/templates/demo.yml
 repo: claudiacachayosorio/demo-gifs # username/demo-gifs
 ````
-
 
 ### Project workflow
 Create a [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token). Add it as a secret to the repository of the project you want to create a gif for.
