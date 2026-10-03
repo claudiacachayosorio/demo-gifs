@@ -14,8 +14,8 @@ async function main() {
   try {
     browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto(url);
     await page.setViewport(viewport);
+    await page.goto(url);
     await page.screenshot({ path: output });
     //
   } finally {
