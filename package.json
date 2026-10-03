@@ -1,13 +1,15 @@
 {
   "name": "demo-gifs",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/claudiacachayosorio/demo-gifs.git"
+  },
+  "license": "MIT",
+  "author": "Claudia Cachay-Osorio",
+  "type": "module",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node scroll.js",
-    "demo": "npm run start demo https://en.wikipedia.org/wiki/Chinchilla"
-  },
-  "dependencies": {
-    "get-pixels": "^3.3.2",
-    "gif-encoder": "^0.7.2",
-    "puppeteer": "^10.1.0"
-  },
-  "devDependencies": {}
+    "start": "node src/index.js"
+  }
 }
