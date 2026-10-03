@@ -14,7 +14,7 @@
 10. Close the browser
 
 #### 🐛 Errors
-- Invalid/missing output cause useful error
+- Invalid/missing input causes useful error
 - Runtime errors cause unsuccessful execution
 - Resources are cleaned up when possible
 
