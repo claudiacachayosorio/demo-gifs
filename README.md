@@ -1,5 +1,10 @@
 # demo-gifs
-Command line tool that generates a webpage demo scroll GIF.
+Generate an animated GIF of a webpage being scrolled from top to bottom.
+
+## :keyboard: Usage
+```shell
+npm start -- https://example.com example.gif
+```
 
 ## :bulb: Inspiration
 * [Build a screenshot pipeline](https://www.codementor.io/projects/web/build-a-screenshot-pipeline-c22ccscro8) by Raphael Sztwiorok
