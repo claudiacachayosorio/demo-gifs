@@ -15,7 +15,23 @@ async function main() {
     const page = await browser.newPage();
     await page.setViewport(viewport);
     await page.goto(url);
-    await page.screenshot({ path: output });
+
+    let isAtBottom = false;
+    let pngNum = 1;
+
+    while (!isAtBottom) {
+      await page.screenshot({ path: `${output}/${pngNum}.png` });
+      pngNum++;
+
+      isAtBottom = await page.evaluate(() => {
+        return (
+          window.innerHeight + window.scrollY >= document.body.scrollHeight
+        );
+      });
+
+      await page.evaluate(() => window.scrollBy(0, 100));
+    }
+
     //
   } finally {
     await browser.close();
