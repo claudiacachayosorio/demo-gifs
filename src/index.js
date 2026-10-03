@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 const url = process.argv[2];
-const output = process.argv[3];
+//const output = process.argv[3];
 
 const viewport = {
   width: 700,
@@ -16,20 +16,17 @@ async function main() {
     await page.setViewport(viewport);
     await page.goto(url);
 
-    let isAtBottom = false;
     let pngNum = 1;
 
-    while (!isAtBottom) {
-      await page.screenshot({ path: `${output}/${pngNum}.png` });
+    while (true) {
+      await page.screenshot({ path: `temp/${pngNum}.png` });
       pngNum++;
 
-      isAtBottom = await page.evaluate(() => {
-        return (
-          window.innerHeight + window.scrollY >= document.body.scrollHeight
-        );
-      });
-
+      const prevScrollY = await page.evaluate(() => window.scrollY);
       await page.evaluate(() => window.scrollBy(0, 100));
+      const currScrollY = await page.evaluate(() => window.scrollY);
+
+      if (currScrollY === prevScrollY) break;
     }
 
     //
