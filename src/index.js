@@ -9,10 +9,9 @@ const viewport = {
 };
 
 async function main() {
-  let browser;
+  const browser = await puppeteer.launch();
 
   try {
-    browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setViewport(viewport);
     await page.goto(url);
