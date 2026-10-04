@@ -4,14 +4,13 @@ import os from "node:os";
 import path from "node:path";
 import puppeteer from "puppeteer";
 import GIFEncoder from "gif-encoder-2";
+import { createCanvas, Image } from "canvas";
 
 const url = process.argv[2];
 const output = process.argv[3];
 
-const viewport = {
-  width: 700,
-  height: 400,
-};
+const width = 700;
+const height = 400;
 
 async function main() {
   const tmpPrefix = path.join(os.tmpdir(), "demo-gifs-");
@@ -21,7 +20,7 @@ async function main() {
 
   try {
     const page = await browser.newPage();
-    await page.setViewport(viewport);
+    await page.setViewport({ width, height });
     await page.goto(url);
 
     let pngNum = 1;
@@ -40,18 +39,26 @@ async function main() {
       if (currScrollY === prevScrollY) break;
     }
 
-    const frames = await fs.readdir(tmpDir);
+    const files = await fs.readdir(tmpDir);
     const outputPath = path.join(".", output);
 
-    const encoder = new GIFEncoder(viewport.width, viewport.height);
+    const encoder = new GIFEncoder(width, height);
     const writeStream = fsSync.createWriteStream(outputPath);
     encoder.createReadStream().pipe(writeStream);
 
     encoder.start();
-    encoder.setDelay(100);
+    encoder.setDelay(700);
 
-    frames.sort().forEach((frame) => {
-      encoder.addFrame(path.join(tmpDir, frame));
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext("2d");
+
+    files.sort().forEach((file) => {
+      const image = new Image();
+      image.onload = () => {
+        ctx.drawImage(image, 0, 0);
+        encoder.addFrame(ctx);
+      };
+      image.src = path.join(tmpDir, file);
     });
 
     encoder.finish();
