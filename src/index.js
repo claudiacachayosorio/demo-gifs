@@ -43,7 +43,7 @@ async function main() {
     const frames = await fs.readdir(tmpDir);
     const outputPath = path.join(".", output);
 
-    const encoder = new GIFEncoder({ width: 350, height: 200 });
+    const encoder = new GIFEncoder(viewport.width, viewport.height);
     const writeStream = fsSync.createWriteStream(outputPath);
     encoder.createReadStream().pipe(writeStream);
 
