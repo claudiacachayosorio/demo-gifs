@@ -1,10 +1,12 @@
 import fs from "node:fs/promises";
+import fsSync from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import puppeteer from "puppeteer";
+import GIFEncoder from "gif-encoder-2";
 
 const url = process.argv[2];
-//const output = process.argv[3];
+const output = process.argv[3];
 
 const viewport = {
   width: 700,
@@ -37,6 +39,22 @@ async function main() {
 
       if (currScrollY === prevScrollY) break;
     }
+
+    const frames = await fs.readdir(tmpDir);
+    const outputPath = path.join(".", output);
+
+    const encoder = new GIFEncoder({ width: 350, height: 200 });
+    const writeStream = fsSync.createWriteStream(outputPath);
+    encoder.createReadStream().pipe(writeStream);
+
+    encoder.start();
+    encoder.setDelay(100);
+
+    frames.sort().forEach((frame) => {
+      encoder.addFrame(path.join(tmpDir, frame));
+    });
+
+    encoder.finish();
 
     //
   } finally {
