@@ -23,6 +23,30 @@ function onError(error) {
   console.error(`${error.name}: ${error.message}`);
 }
 
+async function takeScreenshots(browser, destDir) {
+  const page = await browser.newPage();
+  await page.setViewport({ width, height });
+  await page.goto(url);
+
+  let frameNum = 1;
+
+  while (true) {
+    const pngNum = frameNum.toString().padStart(3, "0");
+
+    await page.screenshot({
+      path: path.join(destDir, `${pngNum}.png`),
+    });
+
+    frameNum++;
+
+    const prevScrollY = await page.evaluate(() => window.scrollY);
+    await page.evaluate(() => window.scrollBy(0, 100));
+    const currScrollY = await page.evaluate(() => window.scrollY);
+
+    if (currScrollY === prevScrollY) break;
+  }
+}
+
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -66,28 +90,7 @@ async function main() {
   const browser = await puppeteer.launch();
 
   try {
-    const page = await browser.newPage();
-    await page.setViewport({ width, height });
-    await page.goto(url);
-
-    let frameNum = 1;
-
-    while (true) {
-      const pngNum = frameNum.toString().padStart(3, "0");
-
-      await page.screenshot({
-        path: path.join(pngDir, `${pngNum}.png`),
-      });
-
-      frameNum++;
-
-      const prevScrollY = await page.evaluate(() => window.scrollY);
-      await page.evaluate(() => window.scrollBy(0, 100));
-      const currScrollY = await page.evaluate(() => window.scrollY);
-
-      if (currScrollY === prevScrollY) break;
-    }
-
+    await takeScreenshots(browser, pngDir);
     const outputPath = path.join(".", output);
     await createGif(pngDir, outputPath);
     //
