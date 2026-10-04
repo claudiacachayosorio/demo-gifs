@@ -19,10 +19,17 @@ const height = 400;
 
 // --- Helpers ----------------------------------------------------------------
 
+function onError(error) {
+  console.error(`${error.name}: ${error.message}`);
+}
+
 function loadImage(src) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const image = new Image();
+
     image.onload = () => resolve(image);
+    image.onerror = reject;
+
     image.src = src;
   });
 }
@@ -79,11 +86,17 @@ async function main() {
     }
 
     encoder.finish();
-
+    //
+  } catch (error) {
+    onError(error);
     //
   } finally {
-    await browser.close();
-    await fs.rm(pngDir, { recursive: true, force: true });
+    try {
+      await browser.close();
+      await fs.rm(pngDir, { recursive: true, force: true });
+    } catch (error) {
+      onError(error);
+    }
   }
 }
 
