@@ -15,7 +15,7 @@
     "format": "prettier --write src/*",
     "format:check": "prettier --check src/*",
     "prepare": "husky",
-    "smoke": "node src/index.js https://example.com"
+    "smoke": "node src/index.js https://example.com example.gif"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -26,6 +26,8 @@
     "prettier": "^3.9.9"
   },
   "dependencies": {
+    "canvas": "^3.2.3",
+    "gif-encoder-2": "^1.0.5",
     "puppeteer": "^25.12.0"
   }
 }
