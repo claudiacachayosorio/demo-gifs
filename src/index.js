@@ -1,16 +1,23 @@
+// --- Imports ----------------------------------------------------------------
+
 import fs from "node:fs/promises";
-import fsSync from "node:fs";
-import os from "node:os";
 import path from "node:path";
-import puppeteer from "puppeteer";
+import { createWriteStream } from "node:fs";
+import { tmpdir } from "node:os";
+
 import GIFEncoder from "gif-encoder-2";
+import puppeteer from "puppeteer";
 import { createCanvas, Image } from "canvas";
+
+// --- Configuration ----------------------------------------------------------
 
 const url = process.argv[2];
 const output = process.argv[3];
 
 const width = 700;
 const height = 400;
+
+// --- Helpers ----------------------------------------------------------------
 
 function loadImage(src) {
   return new Promise((resolve) => {
@@ -20,9 +27,11 @@ function loadImage(src) {
   });
 }
 
+// --- Orchestration ----------------------------------------------------------
+
 async function main() {
-  const tmpPrefix = path.join(os.tmpdir(), "demo-gifs-");
-  const tmpDir = await fs.mkdtemp(tmpPrefix);
+  const dirPrefix = path.join(tmpdir(), "demo-gifs-");
+  const pngDir = await fs.mkdtemp(dirPrefix);
 
   const browser = await puppeteer.launch();
 
@@ -37,7 +46,7 @@ async function main() {
       const pngNum = frameNum.toString().padStart(3, "0");
 
       await page.screenshot({
-        path: path.join(tmpDir, `${pngNum}.png`),
+        path: path.join(pngDir, `${pngNum}.png`),
       });
 
       frameNum++;
@@ -49,11 +58,11 @@ async function main() {
       if (currScrollY === prevScrollY) break;
     }
 
-    const files = await fs.readdir(tmpDir);
+    const files = await fs.readdir(pngDir);
     const outputPath = path.join(".", output);
 
     const encoder = new GIFEncoder(width, height);
-    const writeStream = fsSync.createWriteStream(outputPath);
+    const writeStream = createWriteStream(outputPath);
     encoder.createReadStream().pipe(writeStream);
 
     encoder.start();
@@ -63,7 +72,7 @@ async function main() {
     const ctx = canvas.getContext("2d");
 
     for (const file of files.sort()) {
-      const src = path.join(tmpDir, file);
+      const src = path.join(pngDir, file);
       const image = await loadImage(src);
       ctx.drawImage(image, 0, 0);
       encoder.addFrame(ctx);
@@ -74,7 +83,7 @@ async function main() {
     //
   } finally {
     await browser.close();
-    await fs.rm(tmpDir, { recursive: true, force: true });
+    await fs.rm(pngDir, { recursive: true, force: true });
   }
 }
 
