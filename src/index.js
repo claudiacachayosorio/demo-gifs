@@ -31,14 +31,16 @@ async function main() {
     await page.setViewport({ width, height });
     await page.goto(url);
 
-    let pngNum = 1;
+    let frameNum = 1;
 
     while (true) {
+      const pngNum = frameNum.toString().padStart(3, "0");
+
       await page.screenshot({
         path: path.join(tmpDir, `${pngNum}.png`),
       });
 
-      pngNum++;
+      frameNum++;
 
       const prevScrollY = await page.evaluate(() => window.scrollY);
       await page.evaluate(() => window.scrollBy(0, 100));
