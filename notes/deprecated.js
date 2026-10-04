@@ -1,4 +1,3 @@
-/* eslint-disable */
 // For reference only
 
 const puppeteer = require("puppeteer");
