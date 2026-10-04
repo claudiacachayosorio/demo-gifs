@@ -1,3 +1,6 @@
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import puppeteer from "puppeteer";
 
 const url = process.argv[2];
@@ -9,6 +12,9 @@ const viewport = {
 };
 
 async function main() {
+  const tmpPrefix = path.join(os.tmpdir(), "demo-gifs-");
+  const tmpDir = await fs.mkdtemp(tmpPrefix);
+
   const browser = await puppeteer.launch();
 
   try {
@@ -19,7 +25,10 @@ async function main() {
     let pngNum = 1;
 
     while (true) {
-      await page.screenshot({ path: `temp/${pngNum}.png` });
+      await page.screenshot({
+        path: path.join(tmpDir, `${pngNum}.png`),
+      });
+
       pngNum++;
 
       const prevScrollY = await page.evaluate(() => window.scrollY);
@@ -32,6 +41,7 @@ async function main() {
     //
   } finally {
     await browser.close();
+    await fs.rm(tmpDir, { recursive: true, force: true });
   }
 }
 
