@@ -19,13 +19,14 @@ npm start -- https://example.com example.gif
 9. Scroll down by fixed amount
 10. Repeat until bottom is reached
 11. Create read and write streams
-12. Load image from PNG
-13. Draw image to canvas context
-14. Pass context to GIF encoder
-15. Repeat for each PNG
-16. Save GIF file to output
-17. Close browser
-18. Clean up temp directory
+12. Create canvas context
+13. Load image from PNG
+14. Draw image onto context
+15. Pass context to GIF encoder
+16. Repeat for each PNG
+17. Save GIF file to output
+18. Close browser
+19. Clean up temp directory
 
 ---
 
