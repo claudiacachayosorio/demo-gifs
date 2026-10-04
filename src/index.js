@@ -12,6 +12,14 @@ const output = process.argv[3];
 const width = 700;
 const height = 400;
 
+function loadImage(src) {
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.src = src;
+  });
+}
+
 async function main() {
   const tmpPrefix = path.join(os.tmpdir(), "demo-gifs-");
   const tmpDir = await fs.mkdtemp(tmpPrefix);
@@ -52,14 +60,12 @@ async function main() {
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext("2d");
 
-    files.sort().forEach((file) => {
-      const image = new Image();
-      image.onload = () => {
-        ctx.drawImage(image, 0, 0);
-        encoder.addFrame(ctx);
-      };
-      image.src = path.join(tmpDir, file);
-    });
+    for (const file of files.sort()) {
+      const src = path.join(tmpDir, file);
+      const image = await loadImage(src);
+      ctx.drawImage(image, 0, 0);
+      encoder.addFrame(ctx);
+    }
 
     encoder.finish();
 
