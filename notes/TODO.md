@@ -1,5 +1,62 @@
 # TODO
 
+## Version 0.5
+### 🎯 Overview
+Handle usage and runtime errors.
+
+### 🐛 Errors
+#### ⌨️ Usage
+- missing URL
+- missing output
+- invalid URL
+  - link doesn't exist
+- invalid output
+  - malformed: doesn't end in `.gif`
+  - target directory doesn't exist
+  - path isn't writable
+#### ▶️ Runtime
+- create temp directory
+  - filesystem error
+- launch browser
+  - puppeteer error
+- take screenshots
+  - page creation error
+  - navigation error
+  - screenshot error
+  - page.evaluate() error
+- create gif
+  - filesystem error
+  - stream error
+  - image error
+  - encoder error
+- cleanup
+  - browser error
+  - filesystem error
+
+### 🔀 Workflow
+1. Get URL and output
+2. Validate URL and output
+3. Create temp directory
+4. Launch headless browser
+5. Create page
+6. Set viewport
+7. Navigate to supplied URL
+8. Take screenshot
+9. Save PNG file to temp directory
+10. Scroll down by fixed amount
+11. Repeat until bottom is reached
+12. Create read and write streams
+13. Create canvas context
+14. Load image from PNG
+15. Draw image onto context
+16. Pass context to GIF encoder
+17. Repeat for each PNG
+18. Save GIF file to output
+19. Close browser
+20. Clean up temp directory
+
+--
+
 ## Version 0.4
 ### 🎯 Overview
 Generate an animated gif.
