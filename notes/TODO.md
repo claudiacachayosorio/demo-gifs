@@ -4,20 +4,22 @@
 ### 🎯 Overview
 Generate sequential screenshots of webpage being scrolled top to bottom.
 ```shell
-npm start -- https://example.com temp/example
-# output: temp/example_01.png, temp/example_02.png, ...
+npm start -- https://example.com
+# output to tmpDir: 1.png, 2.png, ...
 ```
 ### 🔀 Workflow
 1. Get URL and filename
-2. Launch headless browser
-3. Open page
-4. Set viewport
-5. Navigate to supplied URL
-6. Take screenshot
-7. Save PNG file to supplied path
-8. Scroll down by fixed amount
-9. Repeat until bottom is reached
-10. Close browser
+2. Create temp directory
+3. Launch headless browser
+4. Open page
+5. Set viewport
+6. Navigate to supplied URL
+7. Take screenshot
+8. Save PNG file to temp directory
+9. Scroll down by fixed amount
+10. Repeat until bottom is reached
+11. Close browser
+12. Clean up temp directory
 
 ---
 
