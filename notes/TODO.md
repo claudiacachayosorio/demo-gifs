@@ -1,5 +1,33 @@
 # TODO
 
+## Version 0.4
+### 🎯 Overview
+Generate an animated gif.
+```shell
+npm start -- https://example.com example.gif
+# output: example.gif
+```
+### 🔀 Workflow
+1. Get URL and output
+2. Create temp directory
+3. Launch headless browser
+4. Open page
+5. Set viewport
+6. Navigate to supplied URL
+7. Take screenshot
+8. Save PNG file to temp directory
+9. Scroll down by fixed amount
+10. Repeat until bottom is reached
+11. Create read and write streams
+12. Render PNG as canvas context
+13. Pass context to GIF encoder
+14. Repeat for each PNG
+15. Save GIF file to output
+16. Close browser
+17. Clean up temp directory
+
+---
+
 ## Version 0.3
 ### 🎯 Overview
 Generate sequential screenshots of webpage being scrolled top to bottom.
