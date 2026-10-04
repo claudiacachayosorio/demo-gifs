@@ -34,6 +34,29 @@ function loadImage(src) {
   });
 }
 
+async function createGif(srcDir, outputPath) {
+  const files = await fs.readdir(srcDir);
+
+  const encoder = new GIFEncoder(width, height);
+  const writeStream = createWriteStream(outputPath);
+  encoder.createReadStream().pipe(writeStream);
+
+  encoder.start();
+  encoder.setDelay(700);
+
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext("2d");
+
+  for (const file of files.sort()) {
+    const src = path.join(srcDir, file);
+    const image = await loadImage(src);
+    ctx.drawImage(image, 0, 0);
+    encoder.addFrame(ctx);
+  }
+
+  encoder.finish();
+}
+
 // --- Orchestration ----------------------------------------------------------
 
 async function main() {
@@ -65,27 +88,8 @@ async function main() {
       if (currScrollY === prevScrollY) break;
     }
 
-    const files = await fs.readdir(pngDir);
     const outputPath = path.join(".", output);
-
-    const encoder = new GIFEncoder(width, height);
-    const writeStream = createWriteStream(outputPath);
-    encoder.createReadStream().pipe(writeStream);
-
-    encoder.start();
-    encoder.setDelay(700);
-
-    const canvas = createCanvas(width, height);
-    const ctx = canvas.getContext("2d");
-
-    for (const file of files.sort()) {
-      const src = path.join(pngDir, file);
-      const image = await loadImage(src);
-      ctx.drawImage(image, 0, 0);
-      encoder.addFrame(ctx);
-    }
-
-    encoder.finish();
+    await createGif(pngDir, outputPath);
     //
   } catch (error) {
     onError(error);
