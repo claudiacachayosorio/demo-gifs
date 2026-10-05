@@ -30,7 +30,7 @@ async function makeTempDir() {
   return dir;
 }
 
-async function takeScreenshots(destDir) {
+async function takeScreenshots(url, destDir) {
   const browser = await puppeteer.launch();
 
   try {
@@ -54,8 +54,6 @@ async function takeScreenshots(destDir) {
       if (currScrollY === prevScrollY) break;
       frameNum++;
     }
-  } catch (error) {
-    onError(error);
   } finally {
     await browser.close();
   }
@@ -96,24 +94,26 @@ async function createGif(srcDir, outputPath) {
   encoder.finish();
 }
 
-// --- Orchestration ----------------------------------------------------------
+// --- Main -------------------------------------------------------------------
 
-async function main() {
+async function generator(url, output) {
   let pngDir;
 
   try {
     pngDir = await makeTempDir();
-    await takeScreenshots(pngDir);
+    await takeScreenshots(url, pngDir);
     const outputPath = path.join(".", output);
     await createGif(pngDir, outputPath);
+  } finally {
+    await fs.rm(pngDir, { recursive: true, force: true });
+  }
+}
+
+function main() {
+  try {
+    generator(url, output);
   } catch (error) {
     onError(error);
-  } finally {
-    try {
-      await fs.rm(pngDir, { recursive: true, force: true });
-    } catch (error) {
-      onError(error);
-    }
   }
 }
 
