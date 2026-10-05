@@ -21,6 +21,7 @@ const height = 400;
 
 function onError(error) {
   console.error(`${error.name}: ${error.message}`);
+  process.exitCode = 1;
 }
 
 async function takeScreenshots(browser, destDir) {
