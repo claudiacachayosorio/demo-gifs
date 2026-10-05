@@ -33,6 +33,11 @@ function usageError(message) {
   process.exit(2);
 }
 
+function isValidURL(input) {
+  const url = new URL(input);
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
 async function makeTempDir() {
   const prefix = path.join(tmpdir(), "demo-gifs-");
   const dir = await fs.mkdtemp(prefix);
@@ -121,7 +126,7 @@ async function main() {
     usageError("Missing arguments.");
   }
 
-  if (!URL.parse(url)) {
+  if (!isValidURL(url)) {
     usageError(`URL '${url}' is invalid.`);
   }
 
