@@ -1,5 +1,48 @@
 # TODO
 
+## Version 0.5
+### 🎯 Overview
+Handle runtime errors:
+- print error information
+- clean up resources
+- exit unsuccessfully
+
+### 🐛 Errors
+- temp directory
+  - filesystem error
+- take screenshots
+  - browser error
+  - page error
+  - screenshot error
+  - window error
+- create gif
+  - stream error
+  - image error
+  - encoder error
+
+### 🔀 Workflow
+1.  Get URL and output
+2.  Create temp directory
+3.  Launch headless browser
+4.  Create page
+5.  Set viewport
+6.  Navigate to supplied URL
+7.  Take screenshot
+8.  Save PNG file to temp directory
+9.  Scroll down by fixed amount
+10. Repeat until bottom is reached
+11. Close browser
+12. Create read and write streams
+13. Create canvas context
+14. Load image from PNG
+15. Draw image onto context
+16. Pass context to GIF encoder
+17. Repeat for each PNG
+18. Save GIF file to output
+19. Clean up temp directory
+
+--
+
 ## Version 0.4
 ### 🎯 Overview
 Generate an animated gif.
