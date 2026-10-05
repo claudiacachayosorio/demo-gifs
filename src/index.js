@@ -1,8 +1,8 @@
 // --- Imports ----------------------------------------------------------------
 
 import fs from "node:fs/promises";
+import fsSync from "node:fs";
 import path from "node:path";
-import { createWriteStream } from "node:fs";
 import { tmpdir } from "node:os";
 
 import GIFEncoder from "gif-encoder-2";
@@ -11,7 +11,7 @@ import { createCanvas, Image } from "canvas";
 
 // --- Configuration ----------------------------------------------------------
 
-const cmd = "src/index.js";
+const cmd = "node src/index.js";
 const usage = `${cmd} URL OUTPUT`;
 
 const url = process.argv[2];
@@ -83,7 +83,7 @@ async function createGif(srcDir, outputPath) {
   const files = await fs.readdir(srcDir);
 
   const encoder = new GIFEncoder(width, height);
-  const writeStream = createWriteStream(outputPath);
+  const writeStream = fsSync.createWriteStream(outputPath);
   encoder.createReadStream().pipe(writeStream);
 
   encoder.start();
@@ -122,11 +122,15 @@ async function main() {
   }
 
   if (!URL.parse(url)) {
-    usageError(`Invalid URL: '${url}'`);
+    usageError(`URL '${url}' is invalid.`);
   }
 
   const outputPath = path.join(".", output);
-  //const outputDir = path.dirname(outputPath);
+  const outputDir = path.dirname(outputPath);
+
+  if (!fsSync.existsSync(outputDir)) {
+    usageError(`Output directory '${outputDir}' does not exist.`);
+  }
 
   try {
     await generateGif(url, outputPath);
