@@ -1,8 +1,8 @@
 // --- Imports ----------------------------------------------------------------
 
 import fs from "node:fs/promises";
-import fsSync from "node:fs";
 import path from "node:path";
+import { createWriteStream, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 
 import GIFEncoder from "gif-encoder-2";
@@ -83,7 +83,7 @@ async function createGif(srcDir, outputPath) {
   const files = await fs.readdir(srcDir);
 
   const encoder = new GIFEncoder(width, height);
-  const writeStream = fsSync.createWriteStream(outputPath);
+  const writeStream = createWriteStream(outputPath);
   encoder.createReadStream().pipe(writeStream);
 
   encoder.start();
@@ -126,13 +126,13 @@ async function main() {
   }
 
   if (!output.endsWith(".gif")) {
-    usageError(`Output '${output}' must end with '.gif'`);
+    usageError(`Output '${output}' must end with '.gif'.`);
   }
 
   const outputPath = path.join(".", output);
   const outputDir = path.dirname(outputPath);
 
-  if (!fsSync.existsSync(outputDir)) {
+  if (!existsSync(outputDir)) {
     usageError(`Output directory '${outputDir}' does not exist.`);
   }
 
