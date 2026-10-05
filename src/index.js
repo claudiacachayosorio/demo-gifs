@@ -74,6 +74,7 @@ async function createGif(srcDir, outputPath) {
   for (const file of files.sort()) {
     const src = path.join(srcDir, file);
     const image = await loadImage(src);
+
     ctx.drawImage(image, 0, 0);
     encoder.addFrame(ctx);
   }
@@ -84,12 +85,19 @@ async function createGif(srcDir, outputPath) {
 // --- Orchestration ----------------------------------------------------------
 
 async function main() {
-  const dirPrefix = path.join(tmpdir(), "demo-gifs-");
-  const pngDir = await fs.mkdtemp(dirPrefix);
-
-  const browser = await puppeteer.launch();
+  let pngDir;
+  let browser;
 
   try {
+    browser = await puppeteer.launch();
+  } catch (error) {
+    onError(error);
+  }
+
+  try {
+    const pngDirPrefix = path.join(tmpdir(), "demo-gifs-");
+    pngDir = await fs.mkdtemp(pngDirPrefix);
+
     await takeScreenshots(browser, pngDir);
     const outputPath = path.join(".", output);
     await createGif(pngDir, outputPath);
