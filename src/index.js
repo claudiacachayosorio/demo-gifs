@@ -24,6 +24,12 @@ function onError(error) {
   process.exitCode = 1;
 }
 
+async function makeTempDir() {
+  const prefix = path.join(tmpdir(), "demo-gifs-");
+  const dir = await fs.mkdtemp(prefix);
+  return dir;
+}
+
 async function takeScreenshots(destDir) {
   const browser = await puppeteer.launch();
 
@@ -96,8 +102,7 @@ async function main() {
   let pngDir;
 
   try {
-    const pngDirPrefix = path.join(tmpdir(), "demo-gifs-");
-    pngDir = await fs.mkdtemp(pngDirPrefix);
+    pngDir = await makeTempDir();
     await takeScreenshots(pngDir);
     const outputPath = path.join(".", output);
     await createGif(pngDir, outputPath);
