@@ -94,7 +94,7 @@ async function createGif(srcDir, outputPath) {
   encoder.finish();
 }
 
-// --- Main -------------------------------------------------------------------
+// --- Execution --------------------------------------------------------------
 
 async function generator(url, output) {
   let pngDir;
@@ -111,6 +111,7 @@ async function generator(url, output) {
 
 function main() {
   try {
+    // TODO: argument validation
     generator(url, output);
   } catch (error) {
     onError(error);
