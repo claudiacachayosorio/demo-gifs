@@ -24,26 +24,34 @@ function onError(error) {
   process.exitCode = 1;
 }
 
-async function takeScreenshots(browser, destDir) {
-  const page = await browser.newPage();
-  await page.setViewport({ width, height });
-  await page.goto(url);
+async function takeScreenshots(destDir) {
+  const browser = await puppeteer.launch();
 
-  let frameNum = 1;
+  try {
+    const page = await browser.newPage();
+    await page.setViewport({ width, height });
+    await page.goto(url);
 
-  while (true) {
-    const pngNum = frameNum.toString().padStart(3, "0");
+    let frameNum = 1;
 
-    await page.screenshot({
-      path: path.join(destDir, `${pngNum}.png`),
-    });
+    while (true) {
+      const pngNum = frameNum.toString().padStart(3, "0");
 
-    const prevScrollY = await page.evaluate(() => window.scrollY);
-    await page.evaluate(() => window.scrollBy(0, 100));
-    const currScrollY = await page.evaluate(() => window.scrollY);
+      await page.screenshot({
+        path: path.join(destDir, `${pngNum}.png`),
+      });
 
-    if (currScrollY === prevScrollY) break;
-    frameNum++;
+      const prevScrollY = await page.evaluate(() => window.scrollY);
+      await page.evaluate(() => window.scrollBy(0, 100));
+      const currScrollY = await page.evaluate(() => window.scrollY);
+
+      if (currScrollY === prevScrollY) break;
+      frameNum++;
+    }
+  } catch (error) {
+    onError(error);
+  } finally {
+    await browser.close();
   }
 }
 
@@ -86,25 +94,18 @@ async function createGif(srcDir, outputPath) {
 
 async function main() {
   let pngDir;
-  let browser;
 
   try {
     const pngDirPrefix = path.join(tmpdir(), "demo-gifs-");
     pngDir = await fs.mkdtemp(pngDirPrefix);
-
-    browser = await puppeteer.launch();
-    await takeScreenshots(browser, pngDir);
+    await takeScreenshots(pngDir);
     const outputPath = path.join(".", output);
     await createGif(pngDir, outputPath);
-    //
   } catch (error) {
     onError(error);
-    //
   } finally {
     try {
-      if (browser) await browser.close();
       await fs.rm(pngDir, { recursive: true, force: true });
-      //
     } catch (error) {
       onError(error);
     }
