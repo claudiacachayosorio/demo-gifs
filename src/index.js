@@ -11,6 +11,9 @@ import { createCanvas, Image } from "canvas";
 
 // --- Configuration ----------------------------------------------------------
 
+const cmd = "src/index.js";
+const usage = `${cmd} URL OUTPUT`;
+
 const url = process.argv[2];
 const output = process.argv[3];
 
@@ -22,6 +25,12 @@ const height = 400;
 function onError(error) {
   console.error(`${error.name}: ${error.message}`);
   process.exitCode = 1;
+}
+
+function usageError(message) {
+  console.error(`Error: ${message}`);
+  console.error(`Usage: ${usage}`);
+  process.exitCode = 2;
 }
 
 async function makeTempDir() {
@@ -96,12 +105,11 @@ async function createGif(srcDir, outputPath) {
 
 // --- Execution --------------------------------------------------------------
 
-async function generateGif(url, output) {
+async function generateGif(url, outputPath) {
   const pngDir = await makeTempDir();
 
   try {
     await takeScreenshots(url, pngDir);
-    const outputPath = path.join(".", output);
     await createGif(pngDir, outputPath);
   } finally {
     await fs.rm(pngDir, { recursive: true, force: true });
@@ -109,9 +117,19 @@ async function generateGif(url, output) {
 }
 
 async function main() {
+  if (!url || !output) {
+    usageError("Missing arguments.");
+  }
+
+  if (!URL.parse(url)) {
+    usageError(`Invalid URL: '${url}'`);
+  }
+
+  const outputPath = path.join(".", output);
+  //const outputDir = path.dirname(outputPath);
+
   try {
-    // TODO: argument validation
-    await generateGif(url, output);
+    await generateGif(url, outputPath);
   } catch (error) {
     onError(error);
   }
