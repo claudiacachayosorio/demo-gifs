@@ -101,7 +101,7 @@ async function main() {
     //
   } finally {
     try {
-      await browser.close();
+      if (browser) await browser.close();
       await fs.rm(pngDir, { recursive: true, force: true });
       //
     } catch (error) {
