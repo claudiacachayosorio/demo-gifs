@@ -11,7 +11,7 @@ import { createCanvas, Image } from "canvas";
 
 // --- Configuration ----------------------------------------------------------
 
-const cmd = "node src/index.js";
+const cmd = "npm start --";
 const usage = `${cmd} URL OUTPUT`;
 
 const url = process.argv[2];
