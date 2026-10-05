@@ -96,11 +96,10 @@ async function createGif(srcDir, outputPath) {
 
 // --- Execution --------------------------------------------------------------
 
-async function generator(url, output) {
-  let pngDir;
+async function generateGif(url, output) {
+  const pngDir = await makeTempDir();
 
   try {
-    pngDir = await makeTempDir();
     await takeScreenshots(url, pngDir);
     const outputPath = path.join(".", output);
     await createGif(pngDir, outputPath);
@@ -109,10 +108,10 @@ async function generator(url, output) {
   }
 }
 
-function main() {
+async function main() {
   try {
     // TODO: argument validation
-    generator(url, output);
+    await generateGif(url, output);
   } catch (error) {
     onError(error);
   }
