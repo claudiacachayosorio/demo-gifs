@@ -37,13 +37,12 @@ async function takeScreenshots(browser, destDir) {
       path: path.join(destDir, `${pngNum}.png`),
     });
 
-    frameNum++;
-
     const prevScrollY = await page.evaluate(() => window.scrollY);
     await page.evaluate(() => window.scrollBy(0, 100));
     const currScrollY = await page.evaluate(() => window.scrollY);
 
     if (currScrollY === prevScrollY) break;
+    frameNum++;
   }
 }
 
@@ -89,15 +88,10 @@ async function main() {
   let browser;
 
   try {
-    browser = await puppeteer.launch();
-  } catch (error) {
-    onError(error);
-  }
-
-  try {
     const pngDirPrefix = path.join(tmpdir(), "demo-gifs-");
     pngDir = await fs.mkdtemp(pngDirPrefix);
 
+    browser = await puppeteer.launch();
     await takeScreenshots(browser, pngDir);
     const outputPath = path.join(".", output);
     await createGif(pngDir, outputPath);
@@ -109,6 +103,7 @@ async function main() {
     try {
       await browser.close();
       await fs.rm(pngDir, { recursive: true, force: true });
+      //
     } catch (error) {
       onError(error);
     }
