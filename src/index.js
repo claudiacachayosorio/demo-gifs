@@ -2,7 +2,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createWriteStream } from "node:fs";
+import { createWriteStream, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 
 import GIFEncoder from "gif-encoder-2";
@@ -10,6 +10,9 @@ import puppeteer from "puppeteer";
 import { createCanvas, Image } from "canvas";
 
 // --- Configuration ----------------------------------------------------------
+
+const cmd = "npm start --";
+const usage = `${cmd} URL OUTPUT`;
 
 const url = process.argv[2];
 const output = process.argv[3];
@@ -22,6 +25,17 @@ const height = 400;
 function onError(error) {
   console.error(`${error.name}: ${error.message}`);
   process.exitCode = 1;
+}
+
+function usageError(message) {
+  console.error(`Error: ${message}`);
+  console.error(`Usage: ${usage}`);
+  process.exit(2);
+}
+
+function isValidURL(input) {
+  const url = new URL(input);
+  return url.protocol === "http:" || url.protocol === "https:";
 }
 
 async function makeTempDir() {
@@ -96,12 +110,11 @@ async function createGif(srcDir, outputPath) {
 
 // --- Execution --------------------------------------------------------------
 
-async function generateGif(url, output) {
+async function generateGif(url, outputPath) {
   const pngDir = await makeTempDir();
 
   try {
     await takeScreenshots(url, pngDir);
-    const outputPath = path.join(".", output);
     await createGif(pngDir, outputPath);
   } finally {
     await fs.rm(pngDir, { recursive: true, force: true });
@@ -109,9 +122,27 @@ async function generateGif(url, output) {
 }
 
 async function main() {
+  if (!url || !output) {
+    usageError("Missing arguments.");
+  }
+
+  if (!isValidURL(url)) {
+    usageError(`URL '${url}' is invalid.`);
+  }
+
+  if (!output.endsWith(".gif")) {
+    usageError(`Output '${output}' must end with '.gif'.`);
+  }
+
+  const outputPath = path.join(".", output);
+  const outputDir = path.dirname(outputPath);
+
+  if (!existsSync(outputDir)) {
+    usageError(`Output directory '${outputDir}' does not exist.`);
+  }
+
   try {
-    // TODO: argument validation
-    await generateGif(url, output);
+    await generateGif(url, outputPath);
   } catch (error) {
     onError(error);
   }

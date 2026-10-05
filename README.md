@@ -3,6 +3,7 @@ Generate an animated GIF of a webpage being scrolled from top to bottom.
 
 ## :keyboard: Usage
 ```shell
+npm start -- URL OUTPUT
 npm start -- https://example.com example.gif
 ```
 

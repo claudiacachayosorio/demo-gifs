@@ -1,5 +1,58 @@
 # TODO
 
+## Version 0.6
+### 🎯 Overview
+Handle usage errors:
+- print useful error and usage snippet
+- exit unsuccessfully
+
+### 🐛 Errors
+#### Usage
+- missing arguments
+- invalid URL
+- invalid output
+#### Runtime
+- temp directory
+  - filesystem error
+- take screenshots
+  - browser error
+  - page error
+  - screenshot error
+  - window error
+- create gif
+  - stream error
+  - image error
+  - encoder error
+
+### 🔀 Workflow
+#### Parameters
+- Get URL and output
+- Validate URL and output
+#### Set up
+- Create temp directory
+#### Screenshots
+- Launch headless browser
+- Create page
+- Set viewport
+- Navigate to supplied URL
+- Take screenshot
+- Save PNG file to temp directory
+- Scroll down by fixed amount
+- Repeat until bottom is reached
+- Close browser
+#### GIF encoding
+- Create read and write streams
+- Create canvas context
+- Load image from PNG
+- Draw image onto context
+- Pass context to GIF encoder
+- Repeat for each PNG
+- Save GIF file to output
+#### Clean up
+- Clean up temp directory
+
+---
+
 ## Version 0.5
 ### 🎯 Overview
 Handle runtime errors:
