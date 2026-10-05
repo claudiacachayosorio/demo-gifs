@@ -30,7 +30,7 @@ function onError(error) {
 function usageError(message) {
   console.error(`Error: ${message}`);
   console.error(`Usage: ${usage}`);
-  process.exitCode = 2;
+  process.exit(2);
 }
 
 async function makeTempDir() {
@@ -123,6 +123,10 @@ async function main() {
 
   if (!URL.parse(url)) {
     usageError(`URL '${url}' is invalid.`);
+  }
+
+  if (!output.endsWith(".gif")) {
+    usageError(`Output '${output}' must end with '.gif'`);
   }
 
   const outputPath = path.join(".", output);
