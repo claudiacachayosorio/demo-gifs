@@ -1,5 +1,14 @@
 # TODO
 
+## Version 0.7
+### 🎯 Overview
+Settle output path behavior:
+- determine path relative to project directory
+- create any missing directories
+- overwrite if file already exists
+
+---
+
 ## Version 0.6
 ### 🎯 Overview
 Handle usage errors:
