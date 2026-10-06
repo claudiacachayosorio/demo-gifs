@@ -2,7 +2,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createWriteStream, existsSync } from "node:fs";
+import { createWriteStream } from "node:fs";
 import { tmpdir } from "node:os";
 
 import GIFEncoder from "gif-encoder-2";
@@ -36,6 +36,14 @@ function usageError(message) {
 function isValidURL(input) {
   const url = new URL(input);
   return url.protocol === "http:" || url.protocol === "https:";
+}
+
+async function getOutputPath(output) {
+  const outputPath = path.resolve(process.cwd(), output);
+  const outputDir = path.dirname(outputPath);
+
+  await fs.mkdir(outputDir, { recursive: true });
+  return outputPath;
 }
 
 async function makeTempDir() {
@@ -134,14 +142,8 @@ async function main() {
     usageError(`Output '${output}' must end with '.gif'.`);
   }
 
-  const outputPath = path.join(".", output);
-  const outputDir = path.dirname(outputPath);
-
-  if (!existsSync(outputDir)) {
-    usageError(`Output directory '${outputDir}' does not exist.`);
-  }
-
   try {
+    const outputPath = await getOutputPath(output);
     await generateGif(url, outputPath);
   } catch (error) {
     onError(error);
