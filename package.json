@@ -1,6 +1,6 @@
 {
   "name": "demo-gifs",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/claudiacachayosorio/demo-gifs.git"
@@ -8,14 +8,14 @@
   "license": "MIT",
   "author": "Claudia Cachay-Osorio",
   "type": "module",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "lint": "eslint src/",
-    "format": "prettier --write src/*",
-    "format:check": "prettier --check src/*",
+    "start": "node index.js",
+    "lint": "eslint . --cache",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "prepare": "husky",
-    "smoke": "node src/index.js https://example.com example.gif"
+    "smoke": "node index.js https://example.com example.gif"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
