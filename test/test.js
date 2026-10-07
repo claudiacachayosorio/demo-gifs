@@ -8,7 +8,7 @@ import path from "node:path";
 import test, { describe, it } from "node:test";
 import { promisify } from "node:util";
 
-// --- Fixtures ---------------------------------------------------------------
+// --- Constants --------------------------------------------------------------
 
 const mockGIF = "demo.gif";
 const mockURL = "https://example.com";
@@ -89,7 +89,7 @@ describe("generator", () => {
   });
 
   test.afterEach(async () => {
-    cleanupTemp(tempDir);
+    await cleanupTemp(tempDir);
   });
 
   it("should successfully save GIF to output when given absolute path", async () => {
@@ -99,7 +99,7 @@ describe("generator", () => {
 
   it("should successfully save GIF to output when given relative path", async () => {
     const outputPath = path.join(tempDir, mockGIF);
-    const relPath = path.relative(process.cwd(), outputPath);
+    const relPath = path.relative(import.meta.dirname, outputPath);
     await assertSuccess(outputPath, relPath);
   });
 
