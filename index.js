@@ -121,7 +121,7 @@ function loadImage(src) {
   });
 }
 
-async function createGif(srcDir, outputPath) {
+async function createGIF(srcDir, outputPath) {
   const files = await fs.readdir(srcDir);
 
   const encoder = new GIFEncoder(width, height);
@@ -147,7 +147,7 @@ async function createGif(srcDir, outputPath) {
 
 // --- Execution --------------------------------------------------------------
 
-async function generateGif(url, outputPath) {
+async function URLtoGIF(url, outputPath) {
   const pngDir = await makeTempDir();
   const browserOptions = {
     args: process.env.CI ? ["--no-sandbox"] : [],
@@ -155,7 +155,7 @@ async function generateGif(url, outputPath) {
 
   try {
     await takeScreenshots(url, pngDir, browserOptions);
-    await createGif(pngDir, outputPath);
+    await createGIF(pngDir, outputPath);
   } finally {
     await fs.rm(pngDir, { recursive: true, force: true });
   }
@@ -166,7 +166,7 @@ async function main() {
 
   try {
     const outputPath = await getOutputPath(output);
-    await generateGif(url, outputPath);
+    await URLtoGIF(url, outputPath);
   } catch (error) {
     onError(error);
   }
