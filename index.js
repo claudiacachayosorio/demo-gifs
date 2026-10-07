@@ -67,18 +67,14 @@ function validateArgs() {
   }
 }
 
-async function getOutputPath(output) {
+async function resolveOutput(output) {
   const outputPath = path.resolve(process.cwd(), output);
-  const outputDir = path.dirname(outputPath);
-
-  await fs.mkdir(outputDir, { recursive: true });
+  await fs.mkdir(path.dirname(outputPath), { recursive: true });
   return outputPath;
 }
 
 async function makeTempDir() {
-  const prefix = path.join(tmpdir(), "demo-gifs-");
-  const dir = await fs.mkdtemp(prefix);
-  return dir;
+  return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-"));
 }
 
 function getBrowserOptions() {
@@ -118,6 +114,7 @@ async function takeScreenshots(url, destDir, browserOptions) {
   }
 }
 
+// Wrap canvas' image loading API in a Promise
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -155,7 +152,7 @@ async function createGIF(srcDir, outputPath) {
 
 // --- Execution --------------------------------------------------------------
 
-async function URLtoGIF(url, outputPath) {
+async function generateDemoGIF(url, outputPath) {
   const pngDir = await makeTempDir();
   const browserOptions = getBrowserOptions();
 
@@ -171,8 +168,8 @@ async function main() {
   validateArgs();
 
   try {
-    const outputPath = await getOutputPath(output);
-    await URLtoGIF(url, outputPath);
+    const outputPath = await resolveOutput(output);
+    await generateDemoGIF(url, outputPath);
   } catch (error) {
     onError(error);
   }
