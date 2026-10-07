@@ -81,6 +81,12 @@ async function makeTempDir() {
   return dir;
 }
 
+function getBrowserOptions() {
+  return {
+    args: process.env.CI ? ["--no-sandbox"] : [],
+  };
+}
+
 async function takeScreenshots(url, destDir, browserOptions) {
   const browser = await puppeteer.launch(browserOptions);
 
@@ -151,9 +157,7 @@ async function createGIF(srcDir, outputPath) {
 
 async function URLtoGIF(url, outputPath) {
   const pngDir = await makeTempDir();
-  const browserOptions = {
-    args: process.env.CI ? ["--no-sandbox"] : [],
-  };
+  const browserOptions = getBrowserOptions();
 
   try {
     await takeScreenshots(url, pngDir, browserOptions);
