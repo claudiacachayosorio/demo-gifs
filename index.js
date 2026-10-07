@@ -14,8 +14,8 @@ import puppeteer from "puppeteer";
 const cmd = "npm start --";
 const usage = `${cmd} URL OUTPUT`;
 
-const url = process.argv[2];
-const output = process.argv[3];
+const options = process.argv.slice(2);
+const [url, output, ...unexpected] = options;
 
 const width = 700;
 const height = 400;
@@ -137,8 +137,17 @@ async function generateGif(url, outputPath) {
 }
 
 async function main() {
-  if (!url || !output) {
-    usageError("Missing arguments.");
+  if (options.length === 0) {
+    console.log(`Usage: ${usage}`);
+    process.exit(0);
+  }
+
+  if (!output) {
+    usageError("Output path is required.");
+  }
+
+  if (unexpected.length > 0) {
+    usageError(`Unexpected arguments '${unexpected.join(" ")}'.`);
   }
 
   if (!isValidURL(url)) {
