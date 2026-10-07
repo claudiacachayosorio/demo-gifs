@@ -8,6 +8,10 @@ import { execFile } from "node:child_process";
 import { describe, it } from "node:test";
 import { promisify } from "node:util";
 
+// --- Constants --------------------------------------------------------------
+
+const mockURL = "https://example.com";
+
 // --- Helpers ----------------------------------------------------------------
 
 const execFileAsync = promisify(execFile);
@@ -48,7 +52,7 @@ async function assertError(expectedStderr, expectedCode, ...args) {
 // --- Tests ------------------------------------------------------------------
 
 describe("interface", () => {
-  it("should print an error when arguments are missing", async (t) => {
+  it("should print an error and exit 2 when arguments are missing", async (t) => {
     const expected = expectUsageError("Missing arguments.");
 
     await t.test("no URL, no output", async () => {
@@ -56,13 +60,18 @@ describe("interface", () => {
     });
 
     await t.test("URL, no output", async () => {
-      await assertError(expected, 2, "https://example.com");
+      await assertError(expected, 2, mockURL);
     });
   });
 
-  it("should print and error when URL is invalid", async () => {
+  it("should print an error and exit 2 when URL is invalid", async () => {
     const expected = expectUsageError("URL 'url' is invalid.");
     await assertError(expected, 2, "url", "demo.gif");
+  });
+
+  it("should print an error and exit 2 when output is invalid", async () => {
+    const expected = expectUsageError("Output 'demo' must end with '.gif'.");
+    await assertError(expected, 2, mockURL, "demo");
   });
 });
 
