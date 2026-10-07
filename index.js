@@ -127,7 +127,7 @@ function loadImage(src) {
 }
 
 async function createGIF(srcDir, outputPath) {
-  const files = await fs.readdir(srcDir);
+  const files = (await fs.readdir(srcDir)).sort();
 
   const encoder = new GIFEncoder(width, height);
   const writeStream = createWriteStream(outputPath);
@@ -139,7 +139,7 @@ async function createGIF(srcDir, outputPath) {
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
 
-  for (const file of files.sort()) {
+  for (const file of files) {
     const src = path.join(srcDir, file);
     const image = await loadImage(src);
 
