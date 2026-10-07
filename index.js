@@ -27,8 +27,11 @@ function onError(error) {
   process.exitCode = 1;
 }
 
-function usageError(message) {
-  console.error(`Error: ${message}`);
+function usageError(desc) {
+  if (desc) {
+    console.error(`Error: ${desc}`);
+  }
+
   console.error(`Usage: ${usage}`);
   process.exit(2);
 }
@@ -138,8 +141,7 @@ async function generateGif(url, outputPath) {
 
 async function main() {
   if (options.length === 0) {
-    console.log(`Usage: ${usage}`);
-    process.exit(0);
+    usageError();
   }
 
   if (!output) {

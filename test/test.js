@@ -62,18 +62,16 @@ async function assertSuccess(outputPath, outputArg = outputPath) {
 // --- Integration Tests ------------------------------------------------------
 
 describe("interface", () => {
-  it("should successfully display usage and exit when no arguments are given", async () => {
-    const { stdout } = await run();
-    assert.strictEqual(usage, stdout);
+  it("should print usage and exit 2 when no arguments are passed", async () => {
+    await assertError(usage, 2);
   });
 
-  it("should print an error and exit 2 when arguments are missing", async () => {
+  it("should print an error and exit 2 when output is missing", async () => {
     const expected = expectUsageError("Output path is required.");
-    const args = [mockURL];
-    await assertError(expected, 2, ...args);
+    await assertError(expected, 2, mockURL);
   });
 
-  it("should print an error and exit 2 when more than 2 arguments are given", async () => {
+  it("should print an error and exit 2 when more than 2 arguments are passed", async () => {
     const expected = expectUsageError("Unexpected arguments 'extra arg'.");
     const args = [mockURL, mockGIF, "extra", "arg"];
     await assertError(expected, 2, ...args);
