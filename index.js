@@ -56,10 +56,8 @@ async function makeTempDir() {
   return dir;
 }
 
-async function takeScreenshots(url, destDir) {
-  const browser = await puppeteer.launch({
-    args: process.env.CI ? ["--no-sandbox"] : [],
-  });
+async function takeScreenshots(url, destDir, browserOptions) {
+  const browser = await puppeteer.launch(browserOptions);
 
   try {
     const page = await browser.newPage();
@@ -126,9 +124,12 @@ async function createGif(srcDir, outputPath) {
 
 async function generateGif(url, outputPath) {
   const pngDir = await makeTempDir();
+  const browserOptions = {
+    args: process.env.CI ? ["--no-sandbox"] : [],
+  };
 
   try {
-    await takeScreenshots(url, pngDir);
+    await takeScreenshots(url, pngDir, browserOptions);
     await createGif(pngDir, outputPath);
   } finally {
     await fs.rm(pngDir, { recursive: true, force: true });
