@@ -8,11 +8,11 @@ Polish and document stable release.
 #### PR/code work
 [x] finish `main()` refactor
 [x] make `puppeteer` launch options injectable
-[ ] remove obsolete/dead code from previous 0.x iterations
-[ ] review error handling
+[x] remove obsolete/dead code from previous 0.x iterations
+[x] review error handling
 [x] review CLI behavior & settle v1 contract
 #### Tests
-[ ] finish output-path integration tests
+[x] finish output-path integration tests
 [ ] have 1 end-to-end test proving URL → GIF
 [ ] test important failure paths
 [x] verify CI passes with injected `--no-sandbox`

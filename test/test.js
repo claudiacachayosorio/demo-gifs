@@ -22,9 +22,7 @@ const usage = "Usage: npm start -- URL OUTPUT";
 const execFileAsync = promisify(execFile);
 
 async function setupTemp() {
-  const prefix = path.join(tmpdir(), "demo-gifs-test-");
-  const temp = await fs.mkdtemp(prefix);
-  return temp;
+  return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-test-"));
 }
 
 async function cleanupTemp(temp) {
