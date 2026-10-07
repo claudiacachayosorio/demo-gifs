@@ -22,9 +22,9 @@ Polish and document stable release.
 [ ] include example of GIT/output behavior
 [ ] document requirements
 [ ] document limitations
-[ ] review `.gitignore`
-[ ] cleanup package metadata
-[ ] final dependency review
+[x] review `.gitignore`
+[x] cleanup package metadata
+[x] final dependency review
 [ ] fresh-clone verification
 [ ] review repository description
 [ ] tag/release
