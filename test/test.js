@@ -11,8 +11,11 @@ import { promisify } from "node:util";
 // --- Constants --------------------------------------------------------------
 
 const testCWD = import.meta.dirname;
+
 const mockGIF = "demo.gif";
 const mockURL = "https://example.com";
+
+const usage = "Usage: npm start -- URL OUTPUT";
 
 // --- Helpers ----------------------------------------------------------------
 
@@ -39,7 +42,6 @@ async function run(...args) {
 }
 
 function expectUsageError(desc) {
-  const usage = "Usage: npm start -- URL OUTPUT";
   return [`Error: ${desc}`, usage].join("\n");
 }
 
@@ -60,18 +62,21 @@ async function assertSuccess(outputPath, outputArg = outputPath) {
 // --- Integration Tests ------------------------------------------------------
 
 describe("interface", () => {
-  it("should print an error and exit 2 when arguments are missing", async (t) => {
-    const expected = expectUsageError("Missing arguments.");
-    const args = [];
+  it("should successfully display usage and exit when no arguments are given", async () => {
+    const { stdout } = await run();
+    assert.strictEqual(usage, stdout);
+  });
 
-    await t.test("no URL, no output", async () => {
-      await assertError(expected, 2, ...args);
-    });
+  it("should print an error and exit 2 when arguments are missing", async () => {
+    const expected = expectUsageError("Output path is required.");
+    const args = [mockURL];
+    await assertError(expected, 2, ...args);
+  });
 
-    await t.test("URL, no output", async () => {
-      args.push(mockURL);
-      await assertError(expected, 2, ...args);
-    });
+  it("should print an error and exit 2 when more than 2 arguments are given", async () => {
+    const expected = expectUsageError("Unexpected arguments 'extra arg'.");
+    const args = [mockURL, mockGIF, "extra", "arg"];
+    await assertError(expected, 2, ...args);
   });
 
   it("should print an error and exit 2 when URL is invalid", async () => {
