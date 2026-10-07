@@ -25,7 +25,7 @@ Polish and document stable release.
 [x] review `.gitignore`
 [x] cleanup package metadata
 [x] final dependency review
-[ ] fresh-clone verification
+[x] fresh-clone verification
 [ ] review repository description
 [ ] tag/release
 
