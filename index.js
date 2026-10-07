@@ -14,8 +14,8 @@ import puppeteer from "puppeteer";
 const cmd = "npm start --";
 const usage = `${cmd} URL OUTPUT`;
 
-const options = process.argv.slice(2);
-const [url, output, ...unexpected] = options;
+const args = process.argv.slice(2);
+const [url, output, ...unexpected] = args;
 
 const width = 700;
 const height = 400;
@@ -42,6 +42,28 @@ function isValidURL(input) {
     return url.protocol === "http:" || url.protocol === "https:";
   } catch {
     return false;
+  }
+}
+
+function validateArgs() {
+  if (args.length === 0) {
+    usageError();
+  }
+
+  if (!output) {
+    usageError("Output path is required.");
+  }
+
+  if (unexpected.length > 0) {
+    usageError(`Unexpected arguments '${unexpected.join(" ")}'.`);
+  }
+
+  if (!isValidURL(url)) {
+    usageError(`URL '${url}' is invalid.`);
+  }
+
+  if (!output.endsWith(".gif")) {
+    usageError(`Output '${output}' must end with '.gif'.`);
   }
 }
 
@@ -140,25 +162,7 @@ async function generateGif(url, outputPath) {
 }
 
 async function main() {
-  if (options.length === 0) {
-    usageError();
-  }
-
-  if (!output) {
-    usageError("Output path is required.");
-  }
-
-  if (unexpected.length > 0) {
-    usageError(`Unexpected arguments '${unexpected.join(" ")}'.`);
-  }
-
-  if (!isValidURL(url)) {
-    usageError(`URL '${url}' is invalid.`);
-  }
-
-  if (!output.endsWith(".gif")) {
-    usageError(`Output '${output}' must end with '.gif'.`);
-  }
+  validateArgs();
 
   try {
     const outputPath = await getOutputPath(output);
