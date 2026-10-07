@@ -92,18 +92,20 @@ async function takeScreenshots(url, destDir, browserOptions) {
     let frameNum = 1;
 
     while (true) {
-      const pngNum = frameNum.toString().padStart(3, "0");
+      const frameName = frameNum.toString().padStart(3, "0");
 
       await page.screenshot({
-        path: path.join(destDir, `${pngNum}.png`),
+        path: path.join(destDir, `${frameName}.png`),
       });
 
       const prevScrollY = await page.evaluate(() => window.scrollY);
       await page.evaluate(() => window.scrollBy(0, 100));
       const currScrollY = await page.evaluate(() => window.scrollY);
 
-      if (currScrollY === prevScrollY) break;
       frameNum++;
+
+      // Stop when scrolling doesn't change page position
+      if (currScrollY === prevScrollY) break;
     }
   } finally {
     await browser.close();

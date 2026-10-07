@@ -6,11 +6,11 @@ Polish and document stable release.
 
 ### 📋 Checklist
 #### PR/code work
-[ ] finish `main()` refactor
+[x] finish `main()` refactor
 [x] make `puppeteer` launch options injectable
 [ ] remove obsolete/dead code from previous 0.x iterations
 [ ] review error handling
-[ ] review CLI behavior & settle v1 contract
+[x] review CLI behavior & settle v1 contract
 #### Tests
 [ ] finish output-path integration tests
 [ ] have 1 end-to-end test proving URL → GIF
