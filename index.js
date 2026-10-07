@@ -57,7 +57,9 @@ async function makeTempDir() {
 }
 
 async function takeScreenshots(url, destDir) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: process.env.CI ? ["--no-sandbox"] : [],
+  });
 
   try {
     const page = await browser.newPage();
