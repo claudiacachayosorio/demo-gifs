@@ -10,7 +10,7 @@ import { promisify } from "node:util";
 
 import { getOutputPath } from "../index.js";
 
-// --- Constants --------------------------------------------------------------
+// --- Fixtures ---------------------------------------------------------------
 
 const mockURL = "https://example.com";
 
@@ -51,7 +51,7 @@ async function assertError(expectedStderr, expectedCode, ...args) {
   });
 }
 
-// --- Tests ------------------------------------------------------------------
+// --- Unit Tests -------------------------------------------------------------
 
 describe("unit: getOutputPath", () => {
   it("should resolve path relative to current directory", async (t) => {
@@ -79,6 +79,8 @@ describe("unit: getOutputPath", () => {
     assert.ok(stats.isDirectory());
   });
 });
+
+// --- Integration Tests ------------------------------------------------------
 
 describe("integration: interface", () => {
   it("should print an error and exit 2 when arguments are missing", async (t) => {
