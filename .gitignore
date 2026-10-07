@@ -1,5 +1,5 @@
 node_modules/
-temp/
+.eslintcache
+
 *.gif
 *.png
-.eslintcache
