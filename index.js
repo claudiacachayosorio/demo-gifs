@@ -34,6 +34,7 @@ function usageError(message) {
 }
 
 function isValidURL(input) {
+  if (!URL.parse(input)) return false;
   const url = new URL(input);
   return url.protocol === "http:" || url.protocol === "https:";
 }
