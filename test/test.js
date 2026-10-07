@@ -99,12 +99,12 @@ describe("generator", () => {
     await cleanupTemp(tempDir);
   });
 
-  it("should successfully create GIF when given absolute path", async () => {
+  it("should successfully create GIF when given an absolute path", async () => {
     const outputPath = path.join(tempDir, mockGIF);
     await assertSuccess(outputPath);
   });
 
-  it("should successfully create GIF when given relative path", async () => {
+  it("should successfully create GIF when given a relative path", async () => {
     const outputPath = path.join(tempDir, mockGIF);
     const relPath = path.relative(testCWD, outputPath);
     await assertSuccess(outputPath, relPath);
@@ -113,5 +113,16 @@ describe("generator", () => {
   it("should successfully create GIF when output directory doesn't exist", async () => {
     const outputPath = path.join(tempDir, "nested", mockGIF);
     await assertSuccess(outputPath);
+  });
+
+  it("should successfully overwrite GIF when file already exists", async () => {
+    const outputPath = path.join(tempDir, mockGIF);
+    const mockContent = "mock content";
+
+    await fs.writeFile(outputPath, mockContent);
+    await assertSuccess(outputPath);
+
+    const currContent = await fs.readFile(outputPath, "utf-8");
+    assert.notStrictEqual(currContent, mockContent);
   });
 });
