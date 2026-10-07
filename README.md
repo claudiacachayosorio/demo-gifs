@@ -1,6 +1,9 @@
 # demo-gifs
 Generate an animated GIF of a webpage being scrolled from top to bottom. Useful for quick web project demos.
 
+## :camera: Example
+![Animated GIF of the Wikipedia page for Chinchillidae being scrolled through from top to bottom.](.github/assets/demo.gif)
+
 ## :package: Installation
 **Requirements:** Node.js 22.12.0 or later
 ```shell
