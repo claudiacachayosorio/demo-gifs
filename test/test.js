@@ -2,11 +2,13 @@
 
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-//import fs from "node:fs/promises";
-//import { tmpdir } from "node:os";
-//import path from "node:path";
+import fs from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import { describe, it } from "node:test";
 import { promisify } from "node:util";
+
+import { getOutputPath } from "../index.js";
 
 // --- Constants --------------------------------------------------------------
 
@@ -16,7 +18,7 @@ const mockURL = "https://example.com";
 
 const execFileAsync = promisify(execFile);
 
-/*async function setupTemp() {
+async function setupTemp() {
   const prefix = path.join(tmpdir(), "demo-gifs-test-");
   const temp = await fs.mkdtemp(prefix);
   return temp;
@@ -24,7 +26,7 @@ const execFileAsync = promisify(execFile);
 
 async function cleanupTemp(temp) {
   await fs.rm(temp, { recursive: true, force: true });
-}*/
+}
 
 async function run(...args) {
   const result = await execFileAsync(
@@ -51,7 +53,34 @@ async function assertError(expectedStderr, expectedCode, ...args) {
 
 // --- Tests ------------------------------------------------------------------
 
-describe("interface", () => {
+describe("unit: getOutputPath", () => {
+  it("should resolve path relative to current directory", async (t) => {
+    const tempDir = await setupTemp();
+    t.after(async () => await cleanupTemp(tempDir));
+
+    const expected = path.join(tempDir, "demo.gif");
+    const relPath = path.relative(process.cwd(), expected);
+
+    const actual = await getOutputPath(relPath);
+    assert.strictEqual(actual, expected);
+  });
+
+  it("should create missing directories", async (t) => {
+    const tempDir = await setupTemp();
+    t.after(async () => await cleanupTemp(tempDir));
+
+    const outputDir = path.join(tempDir, "nested");
+    const expected = path.join(outputDir, "demo.gif");
+
+    const actual = await getOutputPath(expected);
+    assert.strictEqual(actual, expected);
+
+    const stats = await fs.stat(outputDir);
+    assert.ok(stats.isDirectory());
+  });
+});
+
+describe("integration: interface", () => {
   it("should print an error and exit 2 when arguments are missing", async (t) => {
     const expected = expectUsageError("Missing arguments.");
 
@@ -74,32 +103,3 @@ describe("interface", () => {
     await assertError(expected, 2, mockURL, "demo");
   });
 });
-
-/*describe("getOutputPath", () => {
-  it("should resolve path relative to current directory", async (t) => {
-    const tempDir = await setupTemp(process.cwd());
-    t.after(async () => await cleanupTemp(tempDir));
-
-    const outputDir = path.basename(tempDir);
-    const relPath = path.join(outputDir, "demo.gif");
-
-    const expected = path.join(tempDir, "demo.gif");
-    const actual = await getOutputPath(relPath);
-
-    assert.strictEqual(actual, expected);
-  });
-
-  it("should create missing directories", async (t) => {
-    const tempDir = await setupTemp(tmpdir());
-    t.after(async () => await cleanupTemp(tempDir));
-
-    const outputDir = path.join(tempDir, "nested");
-    const expected = path.join(outputDir, "demo.gif");
-    const actual = await getOutputPath(expected);
-
-    assert.strictEqual(actual, expected);
-
-    const stats = await fs.stat(outputDir);
-    assert.ok(stats.isDirectory());
-  });
-});*/
