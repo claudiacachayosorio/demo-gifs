@@ -1,5 +1,6 @@
 name: CI Pipeline
-run-name: CI for ${{ github.ref_name }} (${{ github.event_name }})
+run-name: >-
+  CI for ${{ github.head_ref || github.ref_name }} (${{ github.event_name }})
 
 on:
   push:
