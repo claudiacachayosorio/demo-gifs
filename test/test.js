@@ -99,18 +99,18 @@ describe("generator", () => {
     await cleanupTemp(tempDir);
   });
 
-  it("should successfully save GIF to output when given absolute path", async () => {
+  it("should successfully create GIF when given absolute path", async () => {
     const outputPath = path.join(tempDir, mockGIF);
     await assertSuccess(outputPath);
   });
 
-  it("should successfully save GIF to output when given relative path", async () => {
+  it("should successfully create GIF when given relative path", async () => {
     const outputPath = path.join(tempDir, mockGIF);
     const relPath = path.relative(testCWD, outputPath);
     await assertSuccess(outputPath, relPath);
   });
 
-  it("should create missing directories and successfully save GIF when output directory doesn't exist", async () => {
+  it("should successfully create GIF when output directory doesn't exist", async () => {
     const outputPath = path.join(tempDir, "nested", mockGIF);
     await assertSuccess(outputPath);
   });
