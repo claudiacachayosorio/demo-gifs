@@ -1,39 +1,50 @@
 # TODO
 
 ## ➡️ Version 1.0
+
 ### 🎯 Overview
+
 Polish and document stable release.
 
 ### 📋 Checklist
+
 #### PR/code work
-[x] finish `main()` refactor
-[x] make `puppeteer` launch options injectable
-[x] remove obsolete/dead code from previous 0.x iterations
-[x] review error handling
-[x] review CLI behavior & settle v1 contract
+
+- [x] finish `main()` refactor
+- [x] make `puppeteer` launch options injectable
+- [x] remove obsolete/dead code from previous 0.x iterations
+- [x] review error handling
+- [x] review CLI behavior & settle v1 contract
+
 #### Tests
-[x] finish output-path integration tests
-[x] have 1 end-to-end test proving URL → GIF
-[x] test important failure paths
-[x] verify CI passes with injected `--no-sandbox`
+
+- [x] finish output-path integration tests
+- [x] have 1 end-to-end test proving URL → GIF
+- [x] test important failure paths
+- [x] verify CI passes with injected `--no-sandbox`
+
 #### Documentation/release
-[ ] `README` reflects v1 CLI
-[ ] document installation + usage
-[ ] include example of GIT/output behavior
-[ ] document requirements
-[ ] document limitations
-[x] review `.gitignore`
-[x] cleanup package metadata
-[x] final dependency review
-[x] fresh-clone verification
-[ ] review repository description
-[ ] tag/release
+
+- [ ] `README` reflects v1 CLI
+- [ ] document installation + usage
+- [ ] include example of GIT/output behavior
+- [ ] document requirements
+- [ ] document limitations
+- [x] review `.gitignore`
+- [x] cleanup package metadata
+- [x] final dependency review
+- [x] fresh-clone verification
+- [ ] review repository description
+- [ ] tag/release
 
 ---
 
 ## ➡️ Version 0.7
+
 ### 🎯 Overview
+
 Settle output path behavior:
+
 - determine path relative to project directory
 - create any missing directories
 - overwrite if file already exists
@@ -41,17 +52,24 @@ Settle output path behavior:
 ---
 
 ## ➡️ Version 0.6
+
 ### 🎯 Overview
+
 Handle usage errors:
+
 - print useful error and usage snippet
 - exit unsuccessfully
 
 ### 🐛 Errors
+
 #### Usage
+
 - missing arguments
 - invalid URL
 - invalid output
+
 #### Runtime
+
 - temp directory
   - filesystem error
 - take screenshots
@@ -65,12 +83,18 @@ Handle usage errors:
   - encoder error
 
 ### 🔀 Workflow
+
 #### Parameters
+
 - Get URL and output
 - Validate URL and output
+
 #### Set up
+
 - Create temp directory
+
 #### Screenshots
+
 - Launch headless browser
 - Create page
 - Set viewport
@@ -80,7 +104,9 @@ Handle usage errors:
 - Scroll down by fixed amount
 - Repeat until bottom is reached
 - Close browser
+
 #### GIF encoding
+
 - Create read and write streams
 - Create canvas context
 - Load image from PNG
@@ -88,19 +114,25 @@ Handle usage errors:
 - Pass context to GIF encoder
 - Repeat for each PNG
 - Save GIF file to output
+
 #### Clean up
+
 - Clean up temp directory
 
 ---
 
 ## ➡️ Version 0.5
+
 ### 🎯 Overview
+
 Handle runtime errors:
+
 - print error information
 - clean up resources
 - exit unsuccessfully
 
 ### 🐛 Errors
+
 - temp directory
   - filesystem error
 - take screenshots
@@ -114,6 +146,7 @@ Handle runtime errors:
   - encoder error
 
 ### 🔀 Workflow
+
 1.  Get URL and output
 2.  Create temp directory
 3.  Launch headless browser
@@ -137,13 +170,18 @@ Handle runtime errors:
 --
 
 ## ➡️ Version 0.4
+
 ### 🎯 Overview
+
 Generate an animated gif.
+
 ```shell
 npm start -- https://example.com example.gif
 # output: example.gif
 ```
+
 ### 🔀 Workflow
+
 1. Get URL and output
 2. Create temp directory
 3. Launch headless browser
@@ -167,13 +205,18 @@ npm start -- https://example.com example.gif
 ---
 
 ## ➡️ Version 0.3
+
 ### 🎯 Overview
+
 Generate sequential screenshots of webpage being scrolled top to bottom.
+
 ```shell
 npm start -- https://example.com
 # output to tmpDir: 1.png, 2.png, ...
 ```
+
 ### 🔀 Workflow
+
 1. Get URL and filename
 2. Create temp directory
 3. Launch headless browser
@@ -190,13 +233,18 @@ npm start -- https://example.com
 ---
 
 ## ➡️ Version 0.2
+
 ### 🎯 Overview
+
 Generate 1 screenshot.
+
 ```shell
 npm start -- https://example.com example.png
 # output: example.png
 ```
+
 ### 🔀 Workflow
+
 1. Get URL
 2. Launch browser
 3. Open page
