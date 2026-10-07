@@ -7,7 +7,7 @@ Polish and document stable release.
 ### 📋 Checklist
 #### PR/code work
 [ ] finish `main()` refactor
-[ ] make `puppeteer` launch options injectable
+[x] make `puppeteer` launch options injectable
 [ ] remove obsolete/dead code from previous 0.x iterations
 [ ] review error handling
 [ ] review CLI behavior & settle v1 contract
@@ -15,7 +15,7 @@ Polish and document stable release.
 [ ] finish output-path integration tests
 [ ] have 1 end-to-end test proving URL → GIF
 [ ] test important failure paths
-[ ] verify CI passes with injected `--no-sandbox`
+[x] verify CI passes with injected `--no-sandbox`
 #### Documentation/release
 [ ] `README` reflects v1 CLI
 [ ] document installation + usage

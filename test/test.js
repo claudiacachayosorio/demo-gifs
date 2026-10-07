@@ -10,6 +10,7 @@ import { promisify } from "node:util";
 
 // --- Constants --------------------------------------------------------------
 
+const testCWD = import.meta.dirname;
 const mockGIF = "demo.gif";
 const mockURL = "https://example.com";
 
@@ -31,7 +32,7 @@ async function run(...args) {
   const result = await execFileAsync(
     process.execPath,
     ["../index.js", ...args],
-    { cwd: import.meta.dirname }
+    { cwd: testCWD }
   );
 
   return result;
@@ -61,29 +62,34 @@ async function assertSuccess(outputPath, outputArg = outputPath) {
 describe("interface", () => {
   it("should print an error and exit 2 when arguments are missing", async (t) => {
     const expected = expectUsageError("Missing arguments.");
+    const args = [];
 
     await t.test("no URL, no output", async () => {
-      await assertError(expected, 2);
+      await assertError(expected, 2, ...args);
     });
 
     await t.test("URL, no output", async () => {
-      await assertError(expected, 2, mockURL);
+      args.push(mockURL);
+      await assertError(expected, 2, ...args);
     });
   });
 
   it("should print an error and exit 2 when URL is invalid", async () => {
     const expected = expectUsageError("URL 'url' is invalid.");
-    await assertError(expected, 2, "url", mockGIF);
+    const args = ["url", mockGIF];
+    await assertError(expected, 2, ...args);
   });
 
   it("should print an error and exit 2 when output is invalid", async () => {
     const expected = expectUsageError("Output 'demo' must end with '.gif'.");
-    await assertError(expected, 2, mockURL, "demo");
+    const args = [mockURL, "demo"];
+    await assertError(expected, 2, ...args);
   });
 });
 
 describe("generator", () => {
   let tempDir;
+
   test.beforeEach(async () => {
     tempDir = await setupTemp();
   });
@@ -99,7 +105,7 @@ describe("generator", () => {
 
   it("should successfully save GIF to output when given relative path", async () => {
     const outputPath = path.join(tempDir, mockGIF);
-    const relPath = path.relative(import.meta.dirname, outputPath);
+    const relPath = path.relative(testCWD, outputPath);
     await assertSuccess(outputPath, relPath);
   });
 
