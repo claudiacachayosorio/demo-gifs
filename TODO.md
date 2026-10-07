@@ -13,8 +13,8 @@ Polish and document stable release.
 [x] review CLI behavior & settle v1 contract
 #### Tests
 [x] finish output-path integration tests
-[ ] have 1 end-to-end test proving URL → GIF
-[ ] test important failure paths
+[x] have 1 end-to-end test proving URL → GIF
+[x] test important failure paths
 [x] verify CI passes with injected `--no-sandbox`
 #### Documentation/release
 [ ] `README` reflects v1 CLI
