@@ -2,9 +2,32 @@
 
 ## ➡️ Version 1.0
 ### 🎯 Overview
-- Testing suite
-- Polish based on tests
-- Document v1 behavior
+Polish and document stable release.
+
+### 📋 Checklist
+#### PR/code work
+[ ] finish `main()` refactor
+[ ] make `puppeteer` launch options injectable
+[ ] remove obsolete/dead code from previous 0.x iterations
+[ ] review error handling
+[ ] review CLI behavior & settle v1 contract
+#### Tests
+[ ] finish output-path integration tests
+[ ] have 1 end-to-end test proving URL → GIF
+[ ] test important failure paths
+[ ] verify CI passes with injected `--no-sandbox`
+#### Documentation/release
+[ ] `README` reflects v1 CLI
+[ ] document installation + usage
+[ ] include example of GIT/output behavior
+[ ] document requirements
+[ ] document limitations
+[ ] review `.gitignore`
+[ ] cleanup package metadata
+[ ] final dependency review
+[ ] fresh-clone verification
+[ ] review repository description
+[ ] tag/release
 
 ---
 
