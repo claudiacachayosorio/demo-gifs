@@ -1,13 +1,13 @@
 // --- Imports ----------------------------------------------------------------
 
-import fs from "node:fs/promises";
-import path from "node:path";
 import { createWriteStream } from "node:fs";
+import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
+import path from "node:path";
 
+import { createCanvas, Image } from "canvas";
 import GIFEncoder from "gif-encoder-2";
 import puppeteer from "puppeteer";
-import { createCanvas, Image } from "canvas";
 
 // --- Configuration ----------------------------------------------------------
 
