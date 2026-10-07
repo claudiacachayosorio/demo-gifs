@@ -14,8 +14,8 @@ import puppeteer from "puppeteer";
 const cmd = "npm start --";
 const usage = `${cmd} URL OUTPUT`;
 
-const url = process.argv[2];
-const output = process.argv[3];
+const args = process.argv.slice(2);
+const [url, output, ...unexpected] = args;
 
 const width = 700;
 const height = 400;
@@ -27,8 +27,11 @@ function onError(error) {
   process.exitCode = 1;
 }
 
-function usageError(message) {
-  console.error(`Error: ${message}`);
+function usageError(desc) {
+  if (desc) {
+    console.error(`Error: ${desc}`);
+  }
+
   console.error(`Usage: ${usage}`);
   process.exit(2);
 }
@@ -42,24 +45,46 @@ function isValidURL(input) {
   }
 }
 
-async function getOutputPath(output) {
-  const outputPath = path.resolve(process.cwd(), output);
-  const outputDir = path.dirname(outputPath);
+function validateArgs() {
+  if (args.length === 0) {
+    usageError();
+  }
 
-  await fs.mkdir(outputDir, { recursive: true });
+  if (!output) {
+    usageError("Output path is required.");
+  }
+
+  if (unexpected.length > 0) {
+    usageError(`Unexpected arguments '${unexpected.join(" ")}'.`);
+  }
+
+  if (!isValidURL(url)) {
+    usageError(`URL '${url}' is invalid.`);
+  }
+
+  if (!output.endsWith(".gif")) {
+    usageError(`Output '${output}' must end with '.gif'.`);
+  }
+}
+
+async function resolveOutput(output) {
+  const outputPath = path.resolve(process.cwd(), output);
+  await fs.mkdir(path.dirname(outputPath), { recursive: true });
   return outputPath;
 }
 
 async function makeTempDir() {
-  const prefix = path.join(tmpdir(), "demo-gifs-");
-  const dir = await fs.mkdtemp(prefix);
-  return dir;
+  return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-"));
 }
 
-async function takeScreenshots(url, destDir) {
-  const browser = await puppeteer.launch({
+function getBrowserOptions() {
+  return {
     args: process.env.CI ? ["--no-sandbox"] : [],
-  });
+  };
+}
+
+async function takeScreenshots(url, destDir, browserOptions) {
+  const browser = await puppeteer.launch(browserOptions);
 
   try {
     const page = await browser.newPage();
@@ -69,24 +94,27 @@ async function takeScreenshots(url, destDir) {
     let frameNum = 1;
 
     while (true) {
-      const pngNum = frameNum.toString().padStart(3, "0");
+      const frameName = frameNum.toString().padStart(3, "0");
 
       await page.screenshot({
-        path: path.join(destDir, `${pngNum}.png`),
+        path: path.join(destDir, `${frameName}.png`),
       });
 
       const prevScrollY = await page.evaluate(() => window.scrollY);
       await page.evaluate(() => window.scrollBy(0, 100));
       const currScrollY = await page.evaluate(() => window.scrollY);
 
-      if (currScrollY === prevScrollY) break;
       frameNum++;
+
+      // Stop when scrolling doesn't change page position
+      if (currScrollY === prevScrollY) break;
     }
   } finally {
     await browser.close();
   }
 }
 
+// Wrap canvas' image loading API in a Promise
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -98,8 +126,8 @@ function loadImage(src) {
   });
 }
 
-async function createGif(srcDir, outputPath) {
-  const files = await fs.readdir(srcDir);
+async function createGIF(srcDir, outputPath) {
+  const files = (await fs.readdir(srcDir)).sort();
 
   const encoder = new GIFEncoder(width, height);
   const writeStream = createWriteStream(outputPath);
@@ -111,7 +139,7 @@ async function createGif(srcDir, outputPath) {
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
 
-  for (const file of files.sort()) {
+  for (const file of files) {
     const src = path.join(srcDir, file);
     const image = await loadImage(src);
 
@@ -124,33 +152,24 @@ async function createGif(srcDir, outputPath) {
 
 // --- Execution --------------------------------------------------------------
 
-async function generateGif(url, outputPath) {
+async function generateDemoGIF(url, outputPath) {
   const pngDir = await makeTempDir();
+  const browserOptions = getBrowserOptions();
 
   try {
-    await takeScreenshots(url, pngDir);
-    await createGif(pngDir, outputPath);
+    await takeScreenshots(url, pngDir, browserOptions);
+    await createGIF(pngDir, outputPath);
   } finally {
     await fs.rm(pngDir, { recursive: true, force: true });
   }
 }
 
 async function main() {
-  if (!url || !output) {
-    usageError("Missing arguments.");
-  }
-
-  if (!isValidURL(url)) {
-    usageError(`URL '${url}' is invalid.`);
-  }
-
-  if (!output.endsWith(".gif")) {
-    usageError(`Output '${output}' must end with '.gif'.`);
-  }
+  validateArgs();
 
   try {
-    const outputPath = await getOutputPath(output);
-    await generateGif(url, outputPath);
+    const outputPath = await resolveOutput(output);
+    await generateDemoGIF(url, outputPath);
   } catch (error) {
     onError(error);
   }

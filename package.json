@@ -9,15 +9,26 @@
   "author": "Claudia Cachay-Osorio",
   "type": "module",
   "main": "index.js",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
+    "prepare": "husky",
     "start": "node index.js",
     "test": "node --test",
     "lint": "eslint . --cache",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "check": "npm run format:check && npm run lint && npm test"
+  },
+  "dependencies": {
+    "canvas": "^3.2.3",
+    "gif-encoder-2": "^1.0.5",
+    "puppeteer": "^25.12.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.12.0",
     "eslint-config-prettier": "^10.1.8",
@@ -25,9 +36,9 @@
     "husky": "^9.1.7",
     "prettier": "^3.9.9"
   },
-  "dependencies": {
-    "canvas": "^3.2.3",
-    "gif-encoder-2": "^1.0.5",
-    "puppeteer": "^25.12.0"
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }

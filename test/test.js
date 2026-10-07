@@ -10,17 +10,19 @@ import { promisify } from "node:util";
 
 // --- Constants --------------------------------------------------------------
 
+const testCWD = import.meta.dirname;
+
 const mockGIF = "demo.gif";
 const mockURL = "https://example.com";
+
+const usage = "Usage: npm start -- URL OUTPUT";
 
 // --- Helpers ----------------------------------------------------------------
 
 const execFileAsync = promisify(execFile);
 
 async function setupTemp() {
-  const prefix = path.join(tmpdir(), "demo-gifs-test-");
-  const temp = await fs.mkdtemp(prefix);
-  return temp;
+  return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-test-"));
 }
 
 async function cleanupTemp(temp) {
@@ -31,14 +33,13 @@ async function run(...args) {
   const result = await execFileAsync(
     process.execPath,
     ["../index.js", ...args],
-    { cwd: import.meta.dirname }
+    { cwd: testCWD }
   );
 
   return result;
 }
 
 function expectUsageError(desc) {
-  const usage = "Usage: npm start -- URL OUTPUT";
   return [`Error: ${desc}`, usage].join("\n");
 }
 
@@ -59,31 +60,37 @@ async function assertSuccess(outputPath, outputArg = outputPath) {
 // --- Integration Tests ------------------------------------------------------
 
 describe("interface", () => {
-  it("should print an error and exit 2 when arguments are missing", async (t) => {
-    const expected = expectUsageError("Missing arguments.");
+  it("should print usage and exit 2 when no arguments are passed", async () => {
+    await assertError(usage, 2);
+  });
 
-    await t.test("no URL, no output", async () => {
-      await assertError(expected, 2);
-    });
+  it("should print an error and exit 2 when output is missing", async () => {
+    const expected = expectUsageError("Output path is required.");
+    await assertError(expected, 2, mockURL);
+  });
 
-    await t.test("URL, no output", async () => {
-      await assertError(expected, 2, mockURL);
-    });
+  it("should print an error and exit 2 when more than 2 arguments are passed", async () => {
+    const expected = expectUsageError("Unexpected arguments 'extra arg'.");
+    const args = [mockURL, mockGIF, "extra", "arg"];
+    await assertError(expected, 2, ...args);
   });
 
   it("should print an error and exit 2 when URL is invalid", async () => {
     const expected = expectUsageError("URL 'url' is invalid.");
-    await assertError(expected, 2, "url", mockGIF);
+    const args = ["url", mockGIF];
+    await assertError(expected, 2, ...args);
   });
 
   it("should print an error and exit 2 when output is invalid", async () => {
     const expected = expectUsageError("Output 'demo' must end with '.gif'.");
-    await assertError(expected, 2, mockURL, "demo");
+    const args = [mockURL, "demo"];
+    await assertError(expected, 2, ...args);
   });
 });
 
 describe("generator", () => {
   let tempDir;
+
   test.beforeEach(async () => {
     tempDir = await setupTemp();
   });
@@ -92,19 +99,30 @@ describe("generator", () => {
     await cleanupTemp(tempDir);
   });
 
-  it("should successfully save GIF to output when given absolute path", async () => {
+  it("should successfully create GIF when given an absolute path", async () => {
     const outputPath = path.join(tempDir, mockGIF);
     await assertSuccess(outputPath);
   });
 
-  it("should successfully save GIF to output when given relative path", async () => {
+  it("should successfully create GIF when given a relative path", async () => {
     const outputPath = path.join(tempDir, mockGIF);
-    const relPath = path.relative(import.meta.dirname, outputPath);
+    const relPath = path.relative(testCWD, outputPath);
     await assertSuccess(outputPath, relPath);
   });
 
-  it("should create missing directories and successfully save GIF when output directory doesn't exist", async () => {
+  it("should successfully create GIF when output directory doesn't exist", async () => {
     const outputPath = path.join(tempDir, "nested", mockGIF);
     await assertSuccess(outputPath);
+  });
+
+  it("should successfully overwrite GIF when file already exists", async () => {
+    const outputPath = path.join(tempDir, mockGIF);
+    const mockContent = "mock content";
+
+    await fs.writeFile(outputPath, mockContent);
+    await assertSuccess(outputPath);
+
+    const currContent = await fs.readFile(outputPath, "utf-8");
+    assert.notStrictEqual(currContent, mockContent);
   });
 });
