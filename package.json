@@ -9,6 +9,9 @@
   "author": "Claudia Cachay-Osorio",
   "type": "module",
   "main": "index.js",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "prepare": "husky",
     "start": "node index.js",
