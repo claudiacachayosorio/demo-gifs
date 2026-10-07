@@ -48,7 +48,7 @@ async function assertError(expectedStderr, expectedCode, ...args) {
 // --- Tests ------------------------------------------------------------------
 
 describe("interface", () => {
-  it("should report an error when arguments are missing", async (t) => {
+  it("should print an error when arguments are missing", async (t) => {
     const expected = expectUsageError("Missing arguments.");
 
     await t.test("no URL, no output", async () => {
@@ -58,6 +58,11 @@ describe("interface", () => {
     await t.test("URL, no output", async () => {
       await assertError(expected, 2, "https://example.com");
     });
+  });
+
+  it("should print and error when URL is invalid", async () => {
+    const expected = expectUsageError("URL 'url' is invalid.");
+    await assertError(expected, 2, "url", "demo.gif");
   });
 });
 
