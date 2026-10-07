@@ -26,7 +26,7 @@ async function run(...args) {
   const result = await execFileAsync(
     process.execPath,
     ["../index.js", ...args],
-    { cwd: __dirname }
+    { cwd: import.meta.dirname }
   );
 
   return result;
@@ -40,7 +40,8 @@ function expectUsageError(desc) {
 async function assertError(expectedStderr, expectedCode, ...args) {
   await assert.rejects(run(...args), (error) => {
     assert.strictEqual(error.code, expectedCode);
-    assert.strictEqual(error.stderr, expectedStderr);
+    assert.strictEqual(error.stderr.trim(), expectedStderr);
+    return true;
   });
 }
 
