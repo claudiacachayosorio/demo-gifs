@@ -5,13 +5,12 @@ import { execFile } from "node:child_process";
 import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { describe, it } from "node:test";
+import test, { describe, it } from "node:test";
 import { promisify } from "node:util";
-
-import { getOutputPath } from "../index.js";
 
 // --- Fixtures ---------------------------------------------------------------
 
+const mockGIF = "demo.gif";
 const mockURL = "https://example.com";
 
 // --- Helpers ----------------------------------------------------------------
@@ -51,38 +50,15 @@ async function assertError(expectedStderr, expectedCode, ...args) {
   });
 }
 
-// --- Unit Tests -------------------------------------------------------------
-
-describe("unit: getOutputPath", () => {
-  it("should resolve path relative to current directory", async (t) => {
-    const tempDir = await setupTemp();
-    t.after(async () => await cleanupTemp(tempDir));
-
-    const expected = path.join(tempDir, "demo.gif");
-    const relPath = path.relative(process.cwd(), expected);
-
-    const actual = await getOutputPath(relPath);
-    assert.strictEqual(actual, expected);
-  });
-
-  it("should create missing directories", async (t) => {
-    const tempDir = await setupTemp();
-    t.after(async () => await cleanupTemp(tempDir));
-
-    const outputDir = path.join(tempDir, "nested");
-    const expected = path.join(outputDir, "demo.gif");
-
-    const actual = await getOutputPath(expected);
-    assert.strictEqual(actual, expected);
-
-    const stats = await fs.stat(outputDir);
-    assert.ok(stats.isDirectory());
-  });
-});
+async function assertSuccess(outputPath, outputArg = outputPath) {
+  await run(mockURL, outputArg);
+  const stats = await fs.stat(outputPath);
+  assert.ok(stats.isFile());
+}
 
 // --- Integration Tests ------------------------------------------------------
 
-describe("integration: interface", () => {
+describe("interface", () => {
   it("should print an error and exit 2 when arguments are missing", async (t) => {
     const expected = expectUsageError("Missing arguments.");
 
@@ -97,11 +73,38 @@ describe("integration: interface", () => {
 
   it("should print an error and exit 2 when URL is invalid", async () => {
     const expected = expectUsageError("URL 'url' is invalid.");
-    await assertError(expected, 2, "url", "demo.gif");
+    await assertError(expected, 2, "url", mockGIF);
   });
 
   it("should print an error and exit 2 when output is invalid", async () => {
     const expected = expectUsageError("Output 'demo' must end with '.gif'.");
     await assertError(expected, 2, mockURL, "demo");
+  });
+});
+
+describe("generator", () => {
+  let tempDir;
+  test.beforeEach(async () => {
+    tempDir = await setupTemp();
+  });
+
+  test.afterEach(async () => {
+    cleanupTemp(tempDir);
+  });
+
+  it("should successfully save GIF to output when given absolute path", async () => {
+    const outputPath = path.join(tempDir, mockGIF);
+    await assertSuccess(outputPath);
+  });
+
+  it("should successfully save GIF to output when given relative path", async () => {
+    const outputPath = path.join(tempDir, mockGIF);
+    const relPath = path.relative(process.cwd(), outputPath);
+    await assertSuccess(outputPath, relPath);
+  });
+
+  it("should create missing directories and successfully save GIF when output directory doesn't exist", async () => {
+    const outputPath = path.join(tempDir, "nested", mockGIF);
+    await assertSuccess(outputPath);
   });
 });

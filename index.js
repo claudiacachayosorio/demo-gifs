@@ -154,7 +154,3 @@ async function main() {
 if (import.meta.filename === process.argv[1]) {
   main();
 }
-
-// --- Exports ----------------------------------------------------------------
-
-export { getOutputPath };
