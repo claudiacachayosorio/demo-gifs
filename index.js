@@ -1,13 +1,13 @@
 // --- Imports ----------------------------------------------------------------
 
-import fs from "node:fs/promises";
-import path from "node:path";
 import { createWriteStream } from "node:fs";
+import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
+import path from "node:path";
 
+import { createCanvas, Image } from "canvas";
 import GIFEncoder from "gif-encoder-2";
 import puppeteer from "puppeteer";
-import { createCanvas, Image } from "canvas";
 
 // --- Configuration ----------------------------------------------------------
 
@@ -34,8 +34,12 @@ function usageError(message) {
 }
 
 function isValidURL(input) {
-  const url = new URL(input);
-  return url.protocol === "http:" || url.protocol === "https:";
+  try {
+    const url = new URL(input);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
 }
 
 async function getOutputPath(output) {
@@ -53,7 +57,9 @@ async function makeTempDir() {
 }
 
 async function takeScreenshots(url, destDir) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: process.env.CI ? ["--no-sandbox"] : [],
+  });
 
   try {
     const page = await browser.newPage();
@@ -150,4 +156,6 @@ async function main() {
   }
 }
 
-main();
+if (import.meta.filename === process.argv[1]) {
+  main();
+}

@@ -11,11 +11,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "test": "node --test",
     "lint": "eslint . --cache",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky",
-    "smoke": "node index.js https://example.com example.gif"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

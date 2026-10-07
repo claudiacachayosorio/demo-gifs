@@ -1,6 +1,14 @@
 # TODO
 
-## Version 0.7
+## ➡️ Version 1.0
+### 🎯 Overview
+- Testing suite
+- Polish based on tests
+- Document v1 behavior
+
+---
+
+## ➡️ Version 0.7
 ### 🎯 Overview
 Settle output path behavior:
 - determine path relative to project directory
@@ -9,7 +17,7 @@ Settle output path behavior:
 
 ---
 
-## Version 0.6
+## ➡️ Version 0.6
 ### 🎯 Overview
 Handle usage errors:
 - print useful error and usage snippet
@@ -62,7 +70,7 @@ Handle usage errors:
 
 ---
 
-## Version 0.5
+## ➡️ Version 0.5
 ### 🎯 Overview
 Handle runtime errors:
 - print error information
@@ -105,7 +113,7 @@ Handle runtime errors:
 
 --
 
-## Version 0.4
+## ➡️ Version 0.4
 ### 🎯 Overview
 Generate an animated gif.
 ```shell
@@ -135,7 +143,7 @@ npm start -- https://example.com example.gif
 
 ---
 
-## Version 0.3
+## ➡️ Version 0.3
 ### 🎯 Overview
 Generate sequential screenshots of webpage being scrolled top to bottom.
 ```shell
@@ -158,7 +166,7 @@ npm start -- https://example.com
 
 ---
 
-## Version 0.2
+## ➡️ Version 0.2
 ### 🎯 Overview
 Generate 1 screenshot.
 ```shell
