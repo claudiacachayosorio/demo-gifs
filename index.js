@@ -20,7 +20,7 @@ const [url, output, ...unexpected] = args;
 const width = 700;
 const height = 400;
 
-// --- Helpers ----------------------------------------------------------------
+// --- Utilities --------------------------------------------------------------
 
 function onError(error) {
   console.error(`${error.name}: ${error.message}`);
@@ -36,14 +36,26 @@ function usageError(desc) {
   process.exit(2);
 }
 
-function isValidURL(input) {
+function isValidURL(urlArg) {
   try {
-    const url = new URL(input);
+    const url = new URL(urlArg);
     return url.protocol === "http:" || url.protocol === "https:";
   } catch {
     return false;
   }
 }
+
+async function makeTempDir() {
+  return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-"));
+}
+
+function getBrowserOptions() {
+  return {
+    args: process.env.CI ? ["--no-sandbox"] : [],
+  };
+}
+
+// --- Interface --------------------------------------------------------------
 
 function validateArgs() {
   if (args.length === 0) {
@@ -67,22 +79,25 @@ function validateArgs() {
   }
 }
 
+// --- Generator --------------------------------------------------------------
+
+/**
+ * Resolves output argument to an absolute path.
+ * @param {string} output - Command line argument for GIF's output path.
+ * @returns {Promise<string>} Absolute output path for GIF.
+ */
 async function resolveOutput(output) {
   const outputPath = path.resolve(process.cwd(), output);
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   return outputPath;
 }
 
-async function makeTempDir() {
-  return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-"));
-}
-
-function getBrowserOptions() {
-  return {
-    args: process.env.CI ? ["--no-sandbox"] : [],
-  };
-}
-
+/**
+ * Takes screenshots of webpage being scrolled top to bottom.
+ * @param {string} url     - URL of webpage for screencasting.
+ * @param {string} destDir - Directory for screenshots.
+ * @param {import("puppeteer").LaunchOptions} browserOptions
+ */
 async function takeScreenshots(url, destDir, browserOptions) {
   const browser = await puppeteer.launch(browserOptions);
 
@@ -114,7 +129,11 @@ async function takeScreenshots(url, destDir, browserOptions) {
   }
 }
 
-// Wrap canvas' image loading API in a Promise
+/**
+ * Wraps canvas' image loading API in a Promise.
+ * @param {string} src - Path to PNG file.
+ * @returns {Promise<Image>} Loaded image.
+ */
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -126,6 +145,12 @@ function loadImage(src) {
   });
 }
 
+/**
+ * Converts screenshots into GIF.
+ * @param {string} srcDir     - Directory containing screenshots.
+ * @param {string} outputPath - Path for generated GIF.
+ * @returns {Promise<void>}
+ */
 async function createGIF(srcDir, outputPath) {
   const files = (await fs.readdir(srcDir)).sort();
 
@@ -150,8 +175,12 @@ async function createGIF(srcDir, outputPath) {
   encoder.finish();
 }
 
-// --- Execution --------------------------------------------------------------
-
+/**
+ * Generates animated GIF of supplied URL scroll and saves to output path.
+ * @param {string} url        - Validated URL for screenshots.
+ * @param {string} outputPath - Resolved path for generated GIF.
+ * @returns {Promise<void>}
+ */
 async function generateDemoGIF(url, outputPath) {
   const pngDir = await makeTempDir();
   const browserOptions = getBrowserOptions();
@@ -163,6 +192,8 @@ async function generateDemoGIF(url, outputPath) {
     await fs.rm(pngDir, { recursive: true, force: true });
   }
 }
+
+// --- Execution --------------------------------------------------------------
 
 async function main() {
   validateArgs();
