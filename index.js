@@ -5,7 +5,7 @@ import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { createCanvas, Image } from "canvas";
+import { createCanvas, loadImage } from "canvas";
 import GIFEncoder from "gif-encoder-2";
 import puppeteer from "puppeteer";
 
@@ -127,22 +127,6 @@ async function takeScreenshots(url, destDir, browserOptions) {
   } finally {
     await browser.close();
   }
-}
-
-/**
- * Wraps canvas' image loading API in a Promise.
- * @param {string} src - Path to PNG file.
- * @returns {Promise<Image>} Loaded image.
- */
-function loadImage(src) {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-
-    image.onload = () => resolve(image);
-    image.onerror = reject;
-
-    image.src = src;
-  });
 }
 
 /**
