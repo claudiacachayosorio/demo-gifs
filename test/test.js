@@ -17,7 +17,7 @@ const mockURL = "https://example.com";
 
 const usage = "Usage: npm start -- URL OUTPUT";
 
-// --- Helpers ----------------------------------------------------------------
+// --- Hooks & Utilities ------------------------------------------------------
 
 const execFileAsync = promisify(execFile);
 
@@ -29,6 +29,17 @@ async function cleanupTemp(temp) {
   await fs.rm(temp, { recursive: true, force: true });
 }
 
+function expectUsageError(desc) {
+  return [`Error: ${desc}`, usage].join("\n");
+}
+
+// --- Main Helpers -----------------------------------------------------------
+
+/**
+ * Executes index.js without spawning a shell.
+ * @param  {...string} args - Arguments to pass to index.js.
+ * @returns {Promise<{stdout: string, stderr: string}>} - Child process output.
+ */
 async function run(...args) {
   const result = await execFileAsync(
     process.execPath,
@@ -39,18 +50,11 @@ async function run(...args) {
   return result;
 }
 
-function expectUsageError(desc) {
-  return [`Error: ${desc}`, usage].join("\n");
-}
-
-async function assertError(expectedStderr, expectedCode, ...args) {
-  await assert.rejects(run(...args), (error) => {
-    assert.strictEqual(error.code, expectedCode);
-    assert.strictEqual(error.stderr.trim(), expectedStderr);
-    return true;
-  });
-}
-
+/**
+ * Checks whether a file has a valid GIF signature.
+ * @param {string} filePath - Path to the file to check.
+ * @returns {Promise<boolean>} Whether the file has a GIF signature.
+ */
 async function isGIF(filePath) {
   const fileHandle = await fs.open(filePath);
 
@@ -67,6 +71,27 @@ async function isGIF(filePath) {
   }
 }
 
+/**
+ * Verifies error output and exit code for the specified arguments.
+ * @param {string} expectedStderr - Expected stderr output.
+ * @param {number} expectedCode - Expected exit code.
+ * @param {...string} args - Arguments to pass to run().
+ * @returns {Promise<void>}
+ */
+async function assertError(expectedStderr, expectedCode, ...args) {
+  await assert.rejects(run(...args), (error) => {
+    assert.strictEqual(error.code, expectedCode);
+    assert.strictEqual(error.stderr.trim(), expectedStderr);
+    return true;
+  });
+}
+
+/**
+ * Verifies that a GIF was created at the specified path.
+ * @param {string} outputPath - Absolute path for generated GIF.
+ * @param {string} [outputArg] - Output argument passed to run().
+ * @returns {Promise<void>}
+ */
 async function assertSuccess(outputPath, outputArg = outputPath) {
   await run(mockURL, outputArg);
   assert.ok(await isGIF(outputPath));
