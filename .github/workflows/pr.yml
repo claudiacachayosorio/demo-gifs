@@ -1,0 +1,29 @@
+name: PR
+run-name: >-
+  PR #${{ github.event.pull_request.number }}
+  from ${{ github.head_ref }} (${{ github.event.action }})
+
+on:
+  pull_request:
+    branches: [main]
+    types:
+      - opened
+      - reopened
+      - edited
+
+permissions:
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate title
+        uses: amannn/action-semantic-pull-request@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
