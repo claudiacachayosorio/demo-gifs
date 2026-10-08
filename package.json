@@ -19,7 +19,8 @@
     "lint": "eslint . --cache",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "npm run format:check && npm run lint && npm test"
+    "check": "npm run format:check && npm run lint && npm test",
+    "release": "semantic-release"
   },
   "dependencies": {
     "canvas": "^3.2.3",
@@ -34,11 +35,17 @@
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.13.0",
     "husky": "^9.1.7",
-    "prettier": "^3.9.9"
+    "prettier": "^3.9.9",
+    "semantic-release": "^25.0.9"
   },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
+    ]
+  },
+  "release": {
+    "branches": [
+      "main"
     ]
   }
 }
