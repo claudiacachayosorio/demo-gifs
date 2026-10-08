@@ -1,5 +1,5 @@
-name: CI
-run-name: CI for ${{ github.ref_name }} (${{ github.event_name }})
+name: Test
+run-name: Test ${{ github.ref_name }} (${{ github.event_name }})
 
 on:
   push:
