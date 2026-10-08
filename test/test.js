@@ -51,10 +51,25 @@ async function assertError(expectedStderr, expectedCode, ...args) {
   });
 }
 
+async function isGIF(filePath) {
+  const fileHandle = await fs.open(filePath);
+
+  try {
+    const buffer = Buffer.alloc(6);
+    await fileHandle.read(buffer, 0, 6, 0);
+    const header = buffer.toString("ascii");
+
+    return header === "GIF87a" || header === "GIF89a";
+  } catch {
+    return false;
+  } finally {
+    await fileHandle.close();
+  }
+}
+
 async function assertSuccess(outputPath, outputArg = outputPath) {
   await run(mockURL, outputArg);
-  const stats = await fs.stat(outputPath);
-  assert.ok(stats.isFile());
+  assert.ok(await isGIF(outputPath));
 }
 
 // --- Integration Tests ------------------------------------------------------
