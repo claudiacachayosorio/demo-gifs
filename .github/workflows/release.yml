@@ -14,12 +14,12 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  test-before-release:
     uses: ./.github/workflows/test.yml
 
   release:
     runs-on: ubuntu-latest
-    needs: test
+    needs: test-before-release
 
     permissions:
       contents: write
