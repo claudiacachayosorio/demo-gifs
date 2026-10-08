@@ -94,7 +94,7 @@ async function resolveOutput(output) {
 
 /**
  * Takes screenshots of webpage being scrolled top to bottom.
- * @param {string} url     - URL of webpage for screencasting.
+ * @param {string} url - URL of webpage for screencasting.
  * @param {string} destDir - Directory for screenshots.
  * @param {import("puppeteer").LaunchOptions} browserOptions
  */
@@ -147,7 +147,7 @@ function loadImage(src) {
 
 /**
  * Converts screenshots into GIF.
- * @param {string} srcDir     - Directory containing screenshots.
+ * @param {string} srcDir - Directory containing screenshots.
  * @param {string} outputPath - Path for generated GIF.
  * @returns {Promise<void>}
  */
@@ -177,7 +177,7 @@ async function createGIF(srcDir, outputPath) {
 
 /**
  * Generates animated GIF of supplied URL scroll and saves to output path.
- * @param {string} url        - Validated URL for screenshots.
+ * @param {string} url - Validated URL for screenshots.
  * @param {string} outputPath - Resolved path for generated GIF.
  * @returns {Promise<void>}
  */
