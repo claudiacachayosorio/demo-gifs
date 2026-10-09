@@ -4,6 +4,7 @@ import { createWriteStream } from "node:fs";
 import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import util from "node:util";
 
 import { createCanvas, loadImage } from "canvas";
 import GIFEncoder from "gif-encoder-2";
@@ -11,63 +12,68 @@ import puppeteer from "puppeteer";
 
 // --- Configuration ----------------------------------------------------------
 
-const cmd = "npm start --";
-const usage = `${cmd} URL OUTPUT`;
-
-const args = process.argv.slice(2);
-const [url, output, ...unexpected] = args;
+const version = "1.0.1";
 
 const width = 700;
 const height = 400;
 
-// --- Utilities --------------------------------------------------------------
+const cmd = "npm start --";
+const usage = `${cmd} URL OUTPUT`;
 
-function onError(error) {
-  console.error(`${error.name}: ${error.message}`);
-  process.exitCode = 1;
-}
+const helpMenu = `
+Usage: ${usage}
 
-function usageError(desc) {
-  if (desc) {
-    console.error(`Error: ${desc}`);
-  }
+Options:
+  -v, --version    Show the version number.
+  -h, --help       Show this help menu.
+`;
 
-  console.error(`Usage: ${usage}`);
-  process.exit(2);
-}
+const options = {
+  help: { type: "boolean", short: "h" },
+  version: { type: "boolean", short: "v" },
+};
 
-function isValidURL(urlArg) {
+const { values, positionals } = util.parseArgs({
+  options,
+  allowPositionals: true,
+});
+
+const [url, output, ...unexpected] = positionals;
+
+// --- Execution --------------------------------------------------------------
+
+async function main() {
+  handleOptions();
+  await validateArgs();
+
   try {
-    const url = new URL(urlArg);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch {
-    return false;
+    const outputPath = await resolveOutput(output);
+    await generateDemoGIF(url, outputPath);
+  } catch (error) {
+    onError(error);
   }
 }
 
-async function isDir(path) {
-  try {
-    const stats = await fs.stat(path);
-    return stats.isDirectory();
-  } catch {
-    return false;
-  }
-}
-
-async function makeTempDir() {
-  return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-"));
-}
-
-function getBrowserOptions() {
-  return {
-    args: process.env.CI ? ["--no-sandbox"] : [],
-  };
+if (import.meta.filename === process.argv[1]) {
+  main();
 }
 
 // --- Interface --------------------------------------------------------------
 
+function handleOptions() {
+  if (values.help) {
+    console.log(helpMenu.trim());
+    process.exit(0);
+  }
+
+  if (values.version) {
+    console.log(version);
+    process.exit(0);
+  }
+}
+
 async function validateArgs() {
-  if (args.length === 0) {
+  if (positionals.length === 0) {
     usageError();
   }
 
@@ -190,19 +196,46 @@ async function generateDemoGIF(url, outputPath) {
   }
 }
 
-// --- Execution --------------------------------------------------------------
+// --- Utilities --------------------------------------------------------------
 
-async function main() {
-  await validateArgs();
+function onError(error) {
+  console.error(`${error.name}: ${error.message}`);
+  process.exitCode = 1;
+}
 
+function usageError(desc) {
+  if (desc) {
+    console.error(`Error: ${desc}`);
+  }
+
+  console.error(`Usage: ${usage}`);
+  process.exit(2);
+}
+
+function isValidURL(urlArg) {
   try {
-    const outputPath = await resolveOutput(output);
-    await generateDemoGIF(url, outputPath);
-  } catch (error) {
-    onError(error);
+    const url = new URL(urlArg);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
   }
 }
 
-if (import.meta.filename === process.argv[1]) {
-  main();
+async function isDir(path) {
+  try {
+    const stats = await fs.stat(path);
+    return stats.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+async function makeTempDir() {
+  return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-"));
+}
+
+function getBrowserOptions() {
+  return {
+    args: process.env.CI ? ["--no-sandbox"] : [],
+  };
 }
