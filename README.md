@@ -1,6 +1,6 @@
 # demo-gifs
 
-[![tests](https://github.com/claudiacachayosorio/demo-gifs/actions/workflows/test.yml/badge.svg)](https://github.com/claudiacachayosorio/demo-gifs/actions/workflows/test.yml)
+[![CI](https://github.com/claudiacachayosorio/demo-gifs/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/claudiacachayosorio/demo-gifs/actions/workflows/ci.yml)
 
 Generate an animated GIF of a webpage being scrolled from top to bottom. Useful for creating quick demos of web projects.
 
