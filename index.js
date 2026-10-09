@@ -45,6 +45,15 @@ function isValidURL(urlArg) {
   }
 }
 
+async function isDir(path) {
+  try {
+    const stats = await fs.stat(path);
+    return stats.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
 async function makeTempDir() {
   return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-"));
 }
@@ -57,7 +66,7 @@ function getBrowserOptions() {
 
 // --- Interface --------------------------------------------------------------
 
-function validateArgs() {
+async function validateArgs() {
   if (args.length === 0) {
     usageError();
   }
@@ -76,6 +85,10 @@ function validateArgs() {
 
   if (!output.endsWith(".gif")) {
     usageError(`Output '${output}' must end with '.gif'.`);
+  }
+
+  if (await isDir(output)) {
+    usageError(`Output path '${output}' is a directory.`);
   }
 }
 
@@ -180,7 +193,7 @@ async function generateDemoGIF(url, outputPath) {
 // --- Execution --------------------------------------------------------------
 
 async function main() {
-  validateArgs();
+  await validateArgs();
 
   try {
     const outputPath = await resolveOutput(output);
