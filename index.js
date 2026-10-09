@@ -45,7 +45,8 @@ const [url, output, ...unexpected] = positionals;
 // --- Execution --------------------------------------------------------------
 
 async function main() {
-  handleOptions();
+  if (handleOptions()) return;
+
   await validateArgs();
 
   try {
@@ -65,13 +66,15 @@ if (import.meta.filename === process.argv[1]) {
 function handleOptions() {
   if (values.help) {
     console.log(helpMenu.trim());
-    process.exit(0);
+    return true;
   }
 
   if (values.version) {
     console.log(version);
-    process.exit(0);
+    return true;
   }
+
+  return false;
 }
 
 async function validateArgs() {
