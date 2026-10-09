@@ -45,6 +45,15 @@ function isValidURL(urlArg) {
   }
 }
 
+async function isDirectory(path) {
+  try {
+    const stats = await fs.stat(path);
+    return stats.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
 async function makeTempDir() {
   return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-"));
 }
@@ -76,6 +85,10 @@ function validateArgs() {
 
   if (!output.endsWith(".gif")) {
     usageError(`Output '${output}' must end with '.gif'.`);
+  }
+
+  if (!isDirectory(path)) {
+    usageError(`Output path '${output}' is a directory.`);
   }
 }
 

@@ -126,6 +126,21 @@ describe("interface", () => {
     const args = [mockURL, "demo"];
     await assertError(expected, 2, ...args);
   });
+
+  it("should print an error and exit 2 when output exists and is a directory", async (t) => {
+    const tempDir = await setupTemp();
+    t.after(async () => await cleanupTemp(tempDir));
+
+    const outputPath = path.join(tempDir, mockGIF);
+    const args = [mockURL, outputPath];
+
+    const expected = expectUsageError(
+      `Output path '${outputPath}' is a directory.`
+    );
+
+    await fs.mkdir(outputPath);
+    await assertError(expected, 2, ...args);
+  });
 });
 
 describe("generator", () => {
