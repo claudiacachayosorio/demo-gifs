@@ -1,0 +1,16 @@
+name: CI
+run-name: >-
+  CI for PR #${{ github.event.pull_request.number }}
+  from ${{ github.head_ref }} (${{ github.event.action }})
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/test.yml
