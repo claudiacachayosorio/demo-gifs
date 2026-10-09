@@ -4,7 +4,7 @@ import { createWriteStream } from "node:fs";
 import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import util from "node:util";
+import { parseArgs } from "node:util";
 
 import { createCanvas, loadImage } from "canvas";
 import GIFEncoder from "gif-encoder-2";
@@ -33,7 +33,7 @@ const options = {
   version: { type: "boolean", short: "v" },
 };
 
-const { values, positionals } = util.parseArgs({
+const { values, positionals } = parseArgs({
   options,
   allowPositionals: true,
 });
