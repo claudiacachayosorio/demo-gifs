@@ -25,6 +25,10 @@ const usage = `${cmd} URL OUTPUT`;
 const helpMenu = `
 Usage: ${usage}
 
+Arguments:
+  URL              URL of the webpage to capture.
+  OUTPUT           Destination path for the generated GIF.
+
 Options:
   -v, --version    Show the version number.
   -h, --help       Show this help menu.
@@ -35,35 +39,20 @@ const options = {
   version: { type: "boolean", short: "v" },
 };
 
-const { values, positionals } = parseArgs({
-  options,
-  allowPositionals: true,
-});
+// --- Interface --------------------------------------------------------------
 
-const [url, output, ...unexpected] = positionals;
-
-// --- Execution --------------------------------------------------------------
-
-async function main() {
-  if (handleOptions()) return;
-
-  await validateArgs();
-
+function parseCLI() {
   try {
-    const outputPath = await resolveOutput(output);
-    await generateDemoGIF(url, outputPath);
+    return parseArgs({
+      options,
+      allowPositionals: true,
+    });
   } catch (error) {
-    onError(error);
+    usageError(`Invalid command line arguments: ${error.message}.`);
   }
 }
 
-if (import.meta.filename === process.argv[1]) {
-  main();
-}
-
-// --- Interface --------------------------------------------------------------
-
-function handleOptions() {
+function handleOptions(values) {
   if (values.help) {
     console.log(helpMenu.trim());
     return true;
@@ -77,7 +66,9 @@ function handleOptions() {
   return false;
 }
 
-async function validateArgs() {
+async function validateArgs(positionals) {
+  const [url, output, ...unexpected] = positionals;
+
   if (positionals.length === 0) {
     usageError();
   }
@@ -101,6 +92,29 @@ async function validateArgs() {
   if (await isDir(output)) {
     usageError(`Output path '${output}' is a directory.`);
   }
+
+  return [url, output];
+}
+
+// --- Execution --------------------------------------------------------------
+
+async function main() {
+  const { values, positionals } = parseCLI();
+
+  if (handleOptions(values)) return;
+
+  const [url, output] = await validateArgs(positionals);
+
+  try {
+    const outputPath = await resolveOutput(output);
+    await generateDemoGIF(url, outputPath);
+  } catch (error) {
+    onError(error);
+  }
+}
+
+if (import.meta.filename === process.argv[1]) {
+  main();
 }
 
 // --- Generator --------------------------------------------------------------
