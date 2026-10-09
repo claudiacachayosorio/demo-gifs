@@ -8,6 +8,8 @@ import path from "node:path";
 import test, { describe, it } from "node:test";
 import { promisify } from "node:util";
 
+import packageJSON from "../package.json" with { type: "json" };
+
 // --- Constants --------------------------------------------------------------
 
 const testCWD = import.meta.dirname;
@@ -99,7 +101,63 @@ async function assertSuccess(outputPath, outputArg = outputPath) {
 
 // --- Integration Tests ------------------------------------------------------
 
-describe("interface", () => {
+describe("interface - information", () => {
+  it("should print help text whenever help flag is passed", async (t) => {
+    const testCases = [
+      {
+        args: ["--help"],
+        desc: "long flag: --help",
+      },
+      {
+        args: ["-h"],
+        desc: "short flag: -h",
+      },
+      {
+        args: [mockURL, mockGIF, "-h"],
+        desc: "multiple arguments",
+      },
+      {
+        args: ["-v", "-h"],
+        desc: "version and help flags",
+      },
+    ];
+
+    for (const { args, desc } of testCases) {
+      await t.test(desc, async () => {
+        const { stdout } = await run(args);
+        assert.ok(stdout.includes(usage));
+        assert.ok(stdout.includes("Arguments:"));
+        assert.ok(stdout.includes("Options:"));
+      });
+    }
+  });
+
+  it("should print version information when version flag is passed", async (t) => {
+    const testCases = [
+      {
+        args: ["--version"],
+        desc: "long flag: --version",
+      },
+      {
+        args: ["-v"],
+        desc: "short flag: -v",
+      },
+      {
+        args: [mockURL, mockGIF, "-v"],
+        desc: "multiple arguments",
+      },
+    ];
+
+    for (const { args, desc } of testCases) {
+      await t.test(desc, async () => {
+        const { stdout } = await run(args);
+        assert.strictEqual(stdout, packageJSON.version);
+      });
+    }
+  });
+});
+
+describe("interface - usage errors", () => {
   it("should print usage and exit 2 when no arguments are passed", async () => {
     await assertError(usage, 2);
   });
