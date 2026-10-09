@@ -45,7 +45,7 @@ function isValidURL(urlArg) {
   }
 }
 
-async function isDirectory(path) {
+async function isDir(path) {
   try {
     const stats = await fs.stat(path);
     return stats.isDirectory();
@@ -66,7 +66,7 @@ function getBrowserOptions() {
 
 // --- Interface --------------------------------------------------------------
 
-function validateArgs() {
+async function validateArgs() {
   if (args.length === 0) {
     usageError();
   }
@@ -87,7 +87,7 @@ function validateArgs() {
     usageError(`Output '${output}' must end with '.gif'.`);
   }
 
-  if (!isDirectory(path)) {
+  if (await isDir(output)) {
     usageError(`Output path '${output}' is a directory.`);
   }
 }
@@ -193,7 +193,7 @@ async function generateDemoGIF(url, outputPath) {
 // --- Execution --------------------------------------------------------------
 
 async function main() {
-  validateArgs();
+  await validateArgs();
 
   try {
     const outputPath = await resolveOutput(output);
