@@ -10,9 +10,11 @@ import { createCanvas, loadImage } from "canvas";
 import GIFEncoder from "gif-encoder-2";
 import puppeteer from "puppeteer";
 
+import packageJSON from "./package.json" with { type: "json" };
+
 // --- Configuration ----------------------------------------------------------
 
-const version = "1.0.1";
+const version = packageJSON.version;
 
 const width = 700;
 const height = 400;
