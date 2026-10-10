@@ -100,7 +100,7 @@ async function main() {
 
   const dryRun = args.includes("--dry-run") || args.includes("-d");
   const positionals = args.filter((arg) => {
-    return arg !== "--dry-run" && arg !== "-d";
+    return !["--dry-run", "-d"].includes(arg);
   });
 
   const [url, output] = await validateArgs(positionals);
