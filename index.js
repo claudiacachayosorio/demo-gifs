@@ -65,7 +65,7 @@ async function validateArgs(args) {
     usageError(`URL '${url}' is invalid.`);
   }
 
-  if (!output.endsWith(".gif")) {
+  if (!output.toLowerCase().endsWith(".gif")) {
     usageError(`Output '${output}' must end with '.gif'.`);
   }
 
