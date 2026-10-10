@@ -1,7 +1,9 @@
 node_modules/
-.notes/
 .eslintcache
 
 *.gif
 *.png
 !**/assets/*.gif
+
+.notes/
+notes.md
