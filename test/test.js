@@ -244,12 +244,13 @@ describe("dry run", () => {
     const output = outputArg ?? outputPath;
     const args = [flag, mockURL, output];
 
-    if (logs.length === 0) logs.push(defaultLog);
-
-    logs.unshift(`GIF path: ${outputPath}`);
+    const expectedLogs = [
+      `GIF path: ${outputPath}`,
+      ...(logs.length > 0 ? logs : [defaultLog]),
+    ];
 
     const stdout = await run(...args);
-    logs.forEach((log) => {
+    expectedLogs.forEach((log) => {
       assert.ok(stdout.includes(`[DRY RUN] ${log}`));
     });
   }
@@ -290,7 +291,9 @@ describe("dry run", () => {
 
   it("should report overwriting existing file at output path", async () => {
     const mockFile = path.join(tempDir, mockGIF);
-    await fs.writeFile(mockFile, "");
+    const mockContent = "mock content";
+
+    await fs.writeFile(mockFile, mockContent);
 
     await assertLogs({
       dirPath: tempDir,
@@ -299,6 +302,9 @@ describe("dry run", () => {
 
     const fileIsGIF = await isGIF(mockFile);
     assert.ok(!fileIsGIF);
+
+    const content = await fs.readFile(mockFile, "utf-8");
+    assert.strictEqual(content, mockContent);
   });
 });
 
