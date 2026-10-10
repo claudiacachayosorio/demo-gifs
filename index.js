@@ -36,7 +36,7 @@ Options:
 // --- Interface --------------------------------------------------------------
 
 function handleOptions(args) {
-  if (args.includes("--help") || args.includes("-h")) {
+  if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
     console.log(helpMenu.trim());
     return true;
   }
@@ -51,10 +51,6 @@ function handleOptions(args) {
 
 async function validateArgs(args) {
   const [url, output, ...unexpected] = args;
-
-  if (args.length === 0) {
-    usageError();
-  }
 
   if (!output) {
     usageError("Output path is required.");
