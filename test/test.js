@@ -255,7 +255,7 @@ describe("dry run", () => {
     });
   }
 
-  it("should log output report without generating GIF", async () => {
+  it("should report the planned output without generating GIF", async () => {
     await assertLogs({ dirPath: tempDir });
     assert.ok(await isDirEmpty(tempDir));
   });
@@ -289,7 +289,7 @@ describe("dry run", () => {
     assert.ok(await isDirEmpty(tempDir));
   });
 
-  it("should report overwriting existing file at output path", async () => {
+  it("should report overwriting existing file without modifying it", async () => {
     const mockFile = path.join(tempDir, mockGIF);
     const mockContent = "mock content";
 
