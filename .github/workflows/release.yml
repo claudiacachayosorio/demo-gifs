@@ -15,7 +15,6 @@ permissions:
 
 jobs:
   test-before-release:
-    if: github.ref == "refs/heads/main"
     uses: ./.github/workflows/test.yml
 
   release:
@@ -45,14 +44,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVENT_NAME: ${{ github.event_name }}
         run: |
-          npx_args=(
-            --package semantic-release@25
-            --package @semantic-release/git@11
-            -- semantic-release
-          )
-
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
-            npx_args+=(--dry-run)
+            npx semantic-release --dry-run
+          else
+            npx semantic-release
           fi
-
-          npx "${npx_args[@]}"
