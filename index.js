@@ -77,9 +77,10 @@ async function validateArgs(args) {
 }
 
 async function onDryRun(url, outputPath) {
-  const filename = path.basename(outputPath);
   const dirPath = path.dirname(outputPath);
   const dirExists = await isDir(dirPath);
+  const fileExists = await isFile(outputPath);
+  const filename = path.basename(outputPath);
 
   const log = (message) => console.log(`[DRY RUN] ${message}`);
 
@@ -89,7 +90,11 @@ async function onDryRun(url, outputPath) {
     log(`Will create missing directories for '${dirPath}'`);
   }
 
-  log(`Will generate GIF demo for '${url}' and save it as '${filename}'.`);
+  if (fileExists) {
+    log(`Will overwrite '${filename}' with GIF demo for '${url}'`);
+  } else {
+    log(`Will generate GIF demo for '${url}' and save it as '${filename}'`);
+  }
 }
 
 // --- Execution --------------------------------------------------------------
@@ -231,6 +236,15 @@ function isValidURL(urlArg) {
   try {
     const url = new URL(urlArg);
     return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+async function isFile(path) {
+  try {
+    const stats = await fs.stat(path);
+    return stats.isFile();
   } catch {
     return false;
   }
