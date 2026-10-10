@@ -48,6 +48,18 @@ async function run(...args) {
   });
 }
 
+async function isEmptyDir(path) {
+  const dir = await fs.opendir(path);
+  try {
+    const entry = await dir.read();
+    return entry === null;
+  } catch {
+    return false;
+  } finally {
+    await dir.close();
+  }
+}
+
 /**
  * Checks whether a file has a valid GIF signature.
  * @param {string} filePath - Path to the file to check.
@@ -204,6 +216,93 @@ describe("interface", () => {
       await fs.mkdir(outputPath);
       await assertError(expected, 2, ...args);
     });
+  });
+});
+
+describe("dry run", () => {
+  let tempDir;
+
+  test.beforeEach(async () => {
+    tempDir = await setupTemp();
+  });
+
+  test.afterEach(async () => {
+    await cleanupTemp(tempDir);
+  });
+
+  const defaultLog = `
+    Will generate GIF demo for '${mockURL}' and save it as '${mockGIF}'
+  `.trim();
+
+  async function assertLogs({
+    flag = "--dry-run",
+    dirPath,
+    outputArg,
+    logs = [],
+  }) {
+    const outputPath = path.join(dirPath, mockGIF);
+    const output = outputArg ?? outputPath;
+    const args = [flag, mockURL, output];
+
+    const expectedLogs = [
+      `GIF path: ${outputPath}`,
+      ...(logs.length > 0 ? logs : [defaultLog]),
+    ];
+
+    const { stdout } = await run(...args);
+    expectedLogs.forEach((log) => {
+      assert.ok(stdout.includes(`[DRY RUN] ${log}`));
+    });
+  }
+
+  it("should report the planned output without generating GIF", async () => {
+    await assertLogs({ dirPath: tempDir });
+    assert.ok(await isEmptyDir(tempDir));
+  });
+
+  it("should accept short dry run flag", async () => {
+    await assertLogs({ dirPath: tempDir, flag: "-d" });
+    assert.ok(await isEmptyDir(tempDir));
+  });
+
+  it("should resolve relative path and use it in output report", async () => {
+    const relDirPath = path.relative(testCWD, tempDir);
+
+    await assertLogs({
+      dirPath: tempDir,
+      outputArg: path.join(relDirPath, mockGIF),
+    });
+
+    assert.ok(await isEmptyDir(tempDir));
+  });
+
+  it("should report missing directories without creating them", async () => {
+    const nestedDir = path.join(tempDir, "nested");
+
+    await assertLogs({
+      dirPath: nestedDir,
+      logs: [defaultLog, `Will create missing directories for '${nestedDir}'`],
+    });
+
+    assert.ok(await isEmptyDir(tempDir));
+  });
+
+  it("should report overwriting existing file without modifying it", async () => {
+    const mockFile = path.join(tempDir, mockGIF);
+    const mockContent = "mock content";
+
+    await fs.writeFile(mockFile, mockContent);
+
+    await assertLogs({
+      dirPath: tempDir,
+      logs: [`Will overwrite '${mockGIF}' with GIF demo for '${mockURL}'`],
+    });
+
+    const fileIsGIF = await isGIF(mockFile);
+    assert.ok(!fileIsGIF);
+
+    const content = await fs.readFile(mockFile, "utf-8");
+    assert.strictEqual(content, mockContent);
   });
 });
 

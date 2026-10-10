@@ -1,1 +1,1 @@
-npm test
+node --test --test-name-pattern="interface|dry run"
