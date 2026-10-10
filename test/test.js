@@ -101,103 +101,105 @@ async function assertSuccess(outputPath, outputArg = outputPath) {
 
 // --- Integration Tests ------------------------------------------------------
 
-describe("interface - information", () => {
-  it("should print help text whenever help flag is passed", async (t) => {
-    const testCases = [
-      {
-        args: ["--help"],
-        desc: "long flag: --help",
-      },
-      {
-        args: ["-h"],
-        desc: "short flag: -h",
-      },
-      {
-        args: [mockURL, mockGIF, "-h"],
-        desc: "multiple arguments",
-      },
-      {
-        args: ["-v", "-h"],
-        desc: "version and help flags",
-      },
-    ];
+describe("interface", () => {
+  describe("metadata", () => {
+    it("should print help text whenever help flag is passed", async (t) => {
+      const testCases = [
+        {
+          args: ["--help"],
+          desc: "long flag: --help",
+        },
+        {
+          args: ["-h"],
+          desc: "short flag: -h",
+        },
+        {
+          args: [mockURL, mockGIF, "-h"],
+          desc: "multiple arguments",
+        },
+        {
+          args: ["-v", "-h"],
+          desc: "version and help flags",
+        },
+      ];
 
-    for (const { args, desc } of testCases) {
-      await t.test(desc, async () => {
-        const { stdout } = await run(args);
-        assert.ok(stdout.includes(usage));
-        assert.ok(stdout.includes("Arguments:"));
-        assert.ok(stdout.includes("Options:"));
-      });
-    }
+      for (const { args, desc } of testCases) {
+        await t.test(desc, async () => {
+          const { stdout } = await run(args);
+          assert.ok(stdout.includes(usage));
+          assert.ok(stdout.includes("Arguments:"));
+          assert.ok(stdout.includes("Options:"));
+        });
+      }
+    });
+
+    it("should print version information when version flag is passed", async (t) => {
+      const testCases = [
+        {
+          args: ["--version"],
+          desc: "long flag: --version",
+        },
+        {
+          args: ["-v"],
+          desc: "short flag: -v",
+        },
+        {
+          args: [mockURL, mockGIF, "-v"],
+          desc: "multiple arguments",
+        },
+      ];
+
+      for (const { args, desc } of testCases) {
+        await t.test(desc, async () => {
+          const { stdout } = await run(args);
+          assert.strictEqual(stdout, packageJSON.version);
+        });
+      }
+    });
   });
 
-  it("should print version information when version flag is passed", async (t) => {
-    const testCases = [
-      {
-        args: ["--version"],
-        desc: "long flag: --version",
-      },
-      {
-        args: ["-v"],
-        desc: "short flag: -v",
-      },
-      {
-        args: [mockURL, mockGIF, "-v"],
-        desc: "multiple arguments",
-      },
-    ];
+  describe("usage errors", () => {
+    it("should print usage and exit 2 when no arguments are passed", async () => {
+      await assertError(usage, 2);
+    });
 
-    for (const { args, desc } of testCases) {
-      await t.test(desc, async () => {
-        const { stdout } = await run(args);
-        assert.strictEqual(stdout, packageJSON.version);
-      });
-    }
-  });
-});
+    it("should print an error and exit 2 when output is missing", async () => {
+      const expected = expectUsageError("Output path is required.");
+      await assertError(expected, 2, mockURL);
+    });
 
-describe("interface - usage errors", () => {
-  it("should print usage and exit 2 when no arguments are passed", async () => {
-    await assertError(usage, 2);
-  });
+    it("should print an error and exit 2 when more than 2 arguments are passed", async () => {
+      const expected = expectUsageError("Unexpected arguments 'extra arg'.");
+      const args = [mockURL, mockGIF, "extra", "arg"];
+      await assertError(expected, 2, ...args);
+    });
 
-  it("should print an error and exit 2 when output is missing", async () => {
-    const expected = expectUsageError("Output path is required.");
-    await assertError(expected, 2, mockURL);
-  });
+    it("should print an error and exit 2 when URL is invalid", async () => {
+      const expected = expectUsageError("URL 'url' is invalid.");
+      const args = ["url", mockGIF];
+      await assertError(expected, 2, ...args);
+    });
 
-  it("should print an error and exit 2 when more than 2 arguments are passed", async () => {
-    const expected = expectUsageError("Unexpected arguments 'extra arg'.");
-    const args = [mockURL, mockGIF, "extra", "arg"];
-    await assertError(expected, 2, ...args);
-  });
+    it("should print an error and exit 2 when output is invalid", async () => {
+      const expected = expectUsageError("Output 'demo' must end with '.gif'.");
+      const args = [mockURL, "demo"];
+      await assertError(expected, 2, ...args);
+    });
 
-  it("should print an error and exit 2 when URL is invalid", async () => {
-    const expected = expectUsageError("URL 'url' is invalid.");
-    const args = ["url", mockGIF];
-    await assertError(expected, 2, ...args);
-  });
+    it("should print an error and exit 2 when output exists and is a directory", async (t) => {
+      const tempDir = await setupTemp();
+      t.after(async () => await cleanupTemp(tempDir));
 
-  it("should print an error and exit 2 when output is invalid", async () => {
-    const expected = expectUsageError("Output 'demo' must end with '.gif'.");
-    const args = [mockURL, "demo"];
-    await assertError(expected, 2, ...args);
-  });
+      const outputPath = path.join(tempDir, mockGIF);
+      const args = [mockURL, outputPath];
 
-  it("should print an error and exit 2 when output exists and is a directory", async (t) => {
-    const tempDir = await setupTemp();
-    t.after(async () => await cleanupTemp(tempDir));
+      const expected = expectUsageError(
+        `Output path '${outputPath}' is a directory.`
+      );
 
-    const outputPath = path.join(tempDir, mockGIF);
-    const args = [mockURL, outputPath];
-
-    const expected = expectUsageError(
-      `Output path '${outputPath}' is a directory.`
-    );
-
-    await fs.mkdir(outputPath);
-    await assertError(expected, 2, ...args);
+      await fs.mkdir(outputPath);
+      await assertError(expected, 2, ...args);
+    });
   });
 });
 
