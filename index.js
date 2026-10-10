@@ -73,6 +73,12 @@ async function validateArgs(args) {
     usageError(`Output path '${output}' is a directory.`);
   }
 
+  const outputDir = path.dirname(output);
+
+  if (await isFile(outputDir)) {
+    usageError(`Output directory '${outputDir}' is a file.`);
+  }
+
   return [url, output];
 }
 
