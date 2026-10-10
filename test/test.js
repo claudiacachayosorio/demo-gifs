@@ -208,6 +208,16 @@ describe("interface", () => {
 });
 
 describe("dry run", () => {
+  let tempDir;
+
+  test.beforeEach(async () => {
+    tempDir = await setupTemp();
+  });
+
+  test.afterEach(async () => {
+    await cleanupTemp(tempDir);
+  });
+
   it("should log output report without generating GIF");
 
   it("should accept short dry run flag");
