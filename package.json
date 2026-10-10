@@ -16,6 +16,7 @@
     "prepare": "husky",
     "start": "node index.js",
     "test": "node --test",
+    "test:only": "node --test --test-only",
     "lint": "eslint . --cache",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

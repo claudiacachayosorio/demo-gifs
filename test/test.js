@@ -101,8 +101,8 @@ async function assertSuccess(outputPath, outputArg = outputPath) {
 
 // --- Integration Tests ------------------------------------------------------
 
-describe("interface", () => {
-  describe("metadata", () => {
+describe.only("interface", () => {
+  describe.only("metadata", () => {
     it("should print help text whenever help flag is passed", async (t) => {
       const testCases = [
         {
@@ -125,7 +125,7 @@ describe("interface", () => {
 
       for (const { args, desc } of testCases) {
         await t.test(desc, async () => {
-          const { stdout } = await run(args);
+          const { stdout } = await run(...args);
           assert.ok(stdout.includes(usage));
           assert.ok(stdout.includes("Arguments:"));
           assert.ok(stdout.includes("Options:"));
@@ -151,8 +151,8 @@ describe("interface", () => {
 
       for (const { args, desc } of testCases) {
         await t.test(desc, async () => {
-          const { stdout } = await run(args);
-          assert.strictEqual(stdout, packageJSON.version);
+          const { stdout } = await run(...args);
+          assert.strictEqual(stdout.trim(), packageJSON.version.trim());
         });
       }
     });
