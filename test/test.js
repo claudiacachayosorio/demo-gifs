@@ -216,6 +216,22 @@ describe("interface", () => {
       await fs.mkdir(outputPath);
       await assertError(expected, 2, ...args);
     });
+
+    it("should print an error and exit 2 when output directory is a file", async (t) => {
+      const tempDir = await setupTemp();
+      t.after(async () => await cleanupTemp(tempDir));
+
+      const outputDir = path.join(tempDir, "output");
+      const outputPath = path.join(outputDir, mockGIF);
+      const args = [mockURL, outputPath];
+
+      const expected = expectUsageError(
+        `Output directory '${outputDir}' is a file.`
+      );
+
+      await fs.writeFile(outputDir, "");
+      await assertError(expected, 2, ...args);
+    });
   });
 });
 
