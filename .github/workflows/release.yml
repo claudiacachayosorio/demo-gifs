@@ -26,6 +26,9 @@ jobs:
       contents: write
       pull-requests: write
 
+    env:
+      HUSKY: "0"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v7
