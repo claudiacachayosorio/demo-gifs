@@ -48,7 +48,7 @@ async function run(...args) {
   });
 }
 
-async function isDirEmpty(path) {
+async function isEmptyDir(path) {
   const dir = await fs.opendir(path);
   try {
     const entry = await dir.read();
@@ -219,7 +219,7 @@ describe("interface", () => {
   });
 });
 
-describe.only("dry run", () => {
+describe("dry run", () => {
   let tempDir;
 
   test.beforeEach(async () => {
@@ -257,16 +257,12 @@ describe.only("dry run", () => {
 
   it("should report the planned output without generating GIF", async () => {
     await assertLogs({ dirPath: tempDir });
-    assert.ok(await isDirEmpty(tempDir));
+    assert.ok(await isEmptyDir(tempDir));
   });
 
   it("should accept short dry run flag", async () => {
-    await assertLogs({
-      flag: "-d",
-      dirPath: tempDir,
-    });
-
-    assert.ok(await isDirEmpty(tempDir));
+    await assertLogs({ dirPath: tempDir, flag: "-d" });
+    assert.ok(await isEmptyDir(tempDir));
   });
 
   it("should resolve relative path and use it in output report", async () => {
@@ -277,7 +273,7 @@ describe.only("dry run", () => {
       outputArg: path.join(relDirPath, mockGIF),
     });
 
-    assert.ok(await isDirEmpty(tempDir));
+    assert.ok(await isEmptyDir(tempDir));
   });
 
   it("should report missing directories without creating them", async () => {
@@ -288,7 +284,7 @@ describe.only("dry run", () => {
       logs: [defaultLog, `Will create missing directories for '${nestedDir}'`],
     });
 
-    assert.ok(await isDirEmpty(tempDir));
+    assert.ok(await isEmptyDir(tempDir));
   });
 
   it("should report overwriting existing file without modifying it", async () => {
