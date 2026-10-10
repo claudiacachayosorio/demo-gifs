@@ -9,64 +9,49 @@ import { createCanvas, loadImage } from "canvas";
 import GIFEncoder from "gif-encoder-2";
 import puppeteer from "puppeteer";
 
+import packageJSON from "./package.json" with { type: "json" };
+
 // --- Configuration ----------------------------------------------------------
 
-const cmd = "npm start --";
-const usage = `${cmd} URL OUTPUT`;
-
-const args = process.argv.slice(2);
-const [url, output, ...unexpected] = args;
+const version = packageJSON.version;
 
 const width = 700;
 const height = 400;
 
-// --- Utilities --------------------------------------------------------------
+const cmd = "npm start --";
+const usage = `${cmd} URL OUTPUT`;
 
-function onError(error) {
-  console.error(`${error.name}: ${error.message}`);
-  process.exitCode = 1;
-}
+const helpMenu = `
+Usage: ${usage}
 
-function usageError(desc) {
-  if (desc) {
-    console.error(`Error: ${desc}`);
-  }
+Arguments:
+  URL              URL of the webpage to capture.
+  OUTPUT           Destination path for the generated GIF.
 
-  console.error(`Usage: ${usage}`);
-  process.exit(2);
-}
-
-function isValidURL(urlArg) {
-  try {
-    const url = new URL(urlArg);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
-
-async function isDir(path) {
-  try {
-    const stats = await fs.stat(path);
-    return stats.isDirectory();
-  } catch {
-    return false;
-  }
-}
-
-async function makeTempDir() {
-  return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-"));
-}
-
-function getBrowserOptions() {
-  return {
-    args: process.env.CI ? ["--no-sandbox"] : [],
-  };
-}
+Options:
+  -v, --version    Show the version number.
+  -h, --help       Show this help menu.
+`;
 
 // --- Interface --------------------------------------------------------------
 
-async function validateArgs() {
+function handleOptions(args) {
+  if (args.includes("--help") || args.includes("-h")) {
+    console.log(helpMenu.trim());
+    return true;
+  }
+
+  if (args.includes("--version") || args.includes("-v")) {
+    console.log(version);
+    return true;
+  }
+
+  return false;
+}
+
+async function validateArgs(args) {
+  const [url, output, ...unexpected] = args;
+
   if (args.length === 0) {
     usageError();
   }
@@ -90,6 +75,28 @@ async function validateArgs() {
   if (await isDir(output)) {
     usageError(`Output path '${output}' is a directory.`);
   }
+
+  return [url, output];
+}
+
+// --- Execution --------------------------------------------------------------
+
+async function main() {
+  const args = process.argv.slice(2);
+  if (handleOptions(args)) return;
+
+  const [url, output] = await validateArgs(args);
+
+  try {
+    const outputPath = await resolveOutput(output);
+    await generateDemoGIF(url, outputPath);
+  } catch (error) {
+    onError(error);
+  }
+}
+
+if (import.meta.filename === process.argv[1]) {
+  main();
 }
 
 // --- Generator --------------------------------------------------------------
@@ -190,19 +197,46 @@ async function generateDemoGIF(url, outputPath) {
   }
 }
 
-// --- Execution --------------------------------------------------------------
+// --- Utilities --------------------------------------------------------------
 
-async function main() {
-  await validateArgs();
+function onError(error) {
+  console.error(`${error.name}: ${error.message}`);
+  process.exitCode = 1;
+}
 
+function usageError(desc) {
+  if (desc) {
+    console.error(`Error: ${desc}`);
+  }
+
+  console.error(`Usage: ${usage}`);
+  process.exit(2);
+}
+
+function isValidURL(urlArg) {
   try {
-    const outputPath = await resolveOutput(output);
-    await generateDemoGIF(url, outputPath);
-  } catch (error) {
-    onError(error);
+    const url = new URL(urlArg);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
   }
 }
 
-if (import.meta.filename === process.argv[1]) {
-  main();
+async function isDir(path) {
+  try {
+    const stats = await fs.stat(path);
+    return stats.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+async function makeTempDir() {
+  return fs.mkdtemp(path.join(tmpdir(), "demo-gifs-"));
+}
+
+function getBrowserOptions() {
+  return {
+    args: process.env.CI ? ["--no-sandbox"] : [],
+  };
 }
