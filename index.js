@@ -65,12 +65,18 @@ async function validateArgs(args) {
     usageError(`URL '${url}' is invalid.`);
   }
 
-  if (!output.endsWith(".gif")) {
+  if (!output.toLowerCase().endsWith(".gif")) {
     usageError(`Output '${output}' must end with '.gif'.`);
   }
 
   if (await isDir(output)) {
     usageError(`Output path '${output}' is a directory.`);
+  }
+
+  const outputDir = path.dirname(output);
+
+  if (await isFile(outputDir)) {
+    usageError(`Output directory '${outputDir}' is a file.`);
   }
 
   return [url, output];
