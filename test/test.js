@@ -39,17 +39,13 @@ function expectUsageError(desc) {
 
 /**
  * Executes index.js without spawning a shell.
- * @param  {...string} args - Arguments to pass to index.js.
+ * @param {...string} args - Arguments to pass to index.js.
  * @returns {Promise<{stdout: string, stderr: string}>} - Child process output.
  */
 async function run(...args) {
-  const result = await execFileAsync(
-    process.execPath,
-    ["../index.js", ...args],
-    { cwd: testCWD }
-  );
-
-  return result;
+  return execFileAsync(process.execPath, ["../index.js", ...args], {
+    cwd: testCWD,
+  });
 }
 
 /**
