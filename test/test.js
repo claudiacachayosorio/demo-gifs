@@ -207,6 +207,18 @@ describe("interface", () => {
   });
 });
 
+describe("dry run", () => {
+  it("should log output report without generating GIF");
+
+  it("should accept short dry run flag");
+
+  it("should resolve relative path and use it in output report");
+
+  it("should report missing directories without creating them");
+
+  it("should report overwriting existing file at output path");
+});
+
 describe("generator", () => {
   let tempDir;
 
