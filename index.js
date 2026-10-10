@@ -4,7 +4,6 @@ import { createWriteStream } from "node:fs";
 import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { parseArgs } from "node:util";
 
 import { createCanvas, loadImage } from "canvas";
 import GIFEncoder from "gif-encoder-2";
@@ -34,31 +33,15 @@ Options:
   -h, --help       Show this help menu.
 `;
 
-const options = {
-  help: { type: "boolean", short: "h" },
-  version: { type: "boolean", short: "v" },
-};
-
 // --- Interface --------------------------------------------------------------
 
-function parseCLI() {
-  try {
-    return parseArgs({
-      options,
-      allowPositionals: true,
-    });
-  } catch (error) {
-    usageError(`Invalid command line arguments: ${error.message}.`);
-  }
-}
-
-function handleOptions(values) {
-  if (values.help) {
+function handleOptions(args) {
+  if (args.includes("--help") || args.includes("-h")) {
     console.log(helpMenu.trim());
     return true;
   }
 
-  if (values.version) {
+  if (args.includes("--version") || args.includes("-v")) {
     console.log(version);
     return true;
   }
@@ -66,10 +49,10 @@ function handleOptions(values) {
   return false;
 }
 
-async function validateArgs(positionals) {
-  const [url, output, ...unexpected] = positionals;
+async function validateArgs(args) {
+  const [url, output, ...unexpected] = args;
 
-  if (positionals.length === 0) {
+  if (args.length === 0) {
     usageError();
   }
 
@@ -99,11 +82,10 @@ async function validateArgs(positionals) {
 // --- Execution --------------------------------------------------------------
 
 async function main() {
-  const { values, positionals } = parseCLI();
+  const args = process.argv.slice(2);
+  if (handleOptions(args)) return;
 
-  if (handleOptions(values)) return;
-
-  const [url, output] = await validateArgs(positionals);
+  const [url, output] = await validateArgs(args);
 
   try {
     const outputPath = await resolveOutput(output);
