@@ -98,28 +98,32 @@ async function assertSuccess(outputPath, outputArg = outputPath) {
 // --- Integration Tests ------------------------------------------------------
 
 describe("interface", () => {
-  describe("metadata options", () => {
-    it("should print help text whenever help flag is passed", async (t) => {
+  describe("information options", () => {
+    it("should print help text whenever help flag or no arguments are passed", async (t) => {
       const testCases = [
         {
+          args: [],
+          desc: "no arguments are provided",
+        },
+        {
           args: ["--help"],
-          desc: "long flag: --help",
+          desc: "long help flag",
         },
         {
           args: ["-h"],
-          desc: "short flag: -h",
+          desc: "short help flag",
         },
         {
           args: [mockURL, mockGIF, "-h"],
-          desc: "multiple valid arguments",
+          desc: "help flag with valid arguments",
         },
         {
           args: ["url", "-h"],
-          desc: "valid and invalid arguments",
+          desc: "help flag with invalid argument",
         },
         {
           args: ["-v", "-h"],
-          desc: "version and help flags",
+          desc: "help and version flags",
         },
       ];
 
@@ -137,19 +141,19 @@ describe("interface", () => {
       const testCases = [
         {
           args: ["--version"],
-          desc: "long flag: --version",
+          desc: "long version flag",
         },
         {
           args: ["-v"],
-          desc: "short flag: -v",
+          desc: "short version flag",
         },
         {
           args: [mockURL, mockGIF, "-v"],
-          desc: "multiple valid arguments",
+          desc: "version flag with valid arguments",
         },
         {
           args: ["url", "-v"],
-          desc: "valid and invalid arguments",
+          desc: "version flag with invalid argument",
         },
       ];
 
@@ -163,10 +167,6 @@ describe("interface", () => {
   });
 
   describe("usage errors", () => {
-    it("should print usage and exit 2 when no arguments are passed", async () => {
-      await assertError(usage, 2);
-    });
-
     it("should print an error and exit 2 when output is missing", async () => {
       const expected = expectUsageError("Output path is required.");
       await assertError(expected, 2, mockURL);
