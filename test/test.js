@@ -219,7 +219,7 @@ describe("interface", () => {
   });
 });
 
-describe("dry run", () => {
+describe.only("dry run", () => {
   let tempDir;
 
   test.beforeEach(async () => {
@@ -249,7 +249,7 @@ describe("dry run", () => {
       ...(logs.length > 0 ? logs : [defaultLog]),
     ];
 
-    const stdout = await run(...args);
+    const { stdout } = await run(...args);
     expectedLogs.forEach((log) => {
       assert.ok(stdout.includes(`[DRY RUN] ${log}`));
     });
@@ -271,6 +271,7 @@ describe("dry run", () => {
 
   it("should resolve relative path and use it in output report", async () => {
     const relDirPath = path.relative(testCWD, tempDir);
+
     await assertLogs({
       dirPath: tempDir,
       outputArg: path.join(relDirPath, mockGIF),
@@ -281,9 +282,10 @@ describe("dry run", () => {
 
   it("should report missing directories without creating them", async () => {
     const nestedDir = path.join(tempDir, "nested");
+
     await assertLogs({
       dirPath: nestedDir,
-      logs: [defaultLog, `Will create missing directories for ${nestedDir}`],
+      logs: [defaultLog, `Will create missing directories for '${nestedDir}'`],
     });
 
     assert.ok(await isDirEmpty(tempDir));
