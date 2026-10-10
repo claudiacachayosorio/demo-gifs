@@ -101,8 +101,8 @@ async function assertSuccess(outputPath, outputArg = outputPath) {
 
 // --- Integration Tests ------------------------------------------------------
 
-describe.only("interface", () => {
-  describe.only("metadata", () => {
+describe("interface", () => {
+  describe("metadata options", () => {
     it("should print help text whenever help flag is passed", async (t) => {
       const testCases = [
         {
@@ -115,7 +115,11 @@ describe.only("interface", () => {
         },
         {
           args: [mockURL, mockGIF, "-h"],
-          desc: "multiple arguments",
+          desc: "multiple valid arguments",
+        },
+        {
+          args: ["url", "-h"],
+          desc: "valid and invalid arguments",
         },
         {
           args: ["-v", "-h"],
@@ -145,7 +149,11 @@ describe.only("interface", () => {
         },
         {
           args: [mockURL, mockGIF, "-v"],
-          desc: "multiple arguments",
+          desc: "multiple valid arguments",
+        },
+        {
+          args: ["url", "-v"],
+          desc: "valid and invalid arguments",
         },
       ];
 
