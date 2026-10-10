@@ -29,13 +29,14 @@ Arguments:
   OUTPUT           Destination path for the generated GIF.
 
 Options:
-  -v, --version    Show the version number.
-  -h, --help       Show this help menu.
+  -d, --dry-run    Show planned output without generating GIF.
+  -v, --version    Display version number.
+  -h, --help       Display this help text.
 `;
 
 // --- Interface --------------------------------------------------------------
 
-function handleOptions(args) {
+function handleInfoFlags(args) {
   if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
     console.log(helpMenu.trim());
     return true;
@@ -75,16 +76,44 @@ async function validateArgs(args) {
   return [url, output];
 }
 
+async function onDryRun(url, outputPath) {
+  const filename = path.basename(outputPath);
+  const dirPath = path.dirname(outputPath);
+  const dirExists = await isDir(dirPath);
+
+  const log = (message) => console.log(`[DRY RUN] ${message}`);
+
+  log(`GIF path: ${outputPath}`);
+
+  if (!dirExists) {
+    log(`Will create missing directories for '${dirPath}'`);
+  }
+
+  log(`Will generate GIF demo for '${url}' and save it as '${filename}'.`);
+}
+
 // --- Execution --------------------------------------------------------------
 
 async function main() {
   const args = process.argv.slice(2);
-  if (handleOptions(args)) return;
+  if (handleInfoFlags(args)) return;
 
-  const [url, output] = await validateArgs(args);
+  const dryRun = args.includes("--dry-run") || args.includes("-d");
+  const positionals = args.filter((arg) => {
+    return arg !== "--dry-run" && arg !== "-d";
+  });
+
+  const [url, output] = await validateArgs(positionals);
 
   try {
-    const outputPath = await resolveOutput(output);
+    const outputPath = path.resolve(process.cwd(), output);
+
+    if (dryRun) {
+      await onDryRun(url, outputPath);
+      return;
+    }
+
+    await fs.mkdir(path.dirname(outputPath), { recursive: true });
     await generateDemoGIF(url, outputPath);
   } catch (error) {
     onError(error);
@@ -96,17 +125,6 @@ if (import.meta.filename === process.argv[1]) {
 }
 
 // --- Generator --------------------------------------------------------------
-
-/**
- * Resolves output argument to an absolute path.
- * @param {string} output - Command line argument for GIF's output path.
- * @returns {Promise<string>} Absolute output path for GIF.
- */
-async function resolveOutput(output) {
-  const outputPath = path.resolve(process.cwd(), output);
-  await fs.mkdir(path.dirname(outputPath), { recursive: true });
-  return outputPath;
-}
 
 /**
  * Takes screenshots of webpage being scrolled top to bottom.
