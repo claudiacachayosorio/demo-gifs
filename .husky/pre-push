@@ -1,1 +1,1 @@
-node --test --test-name-pattern="interface|dry run"
+node --test test/interface.test.js test/dry-run.test.js
