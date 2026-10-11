@@ -42,6 +42,11 @@ export async function run(...args) {
   });
 }
 
+/**
+ * Checks if provided path is to an empty directory.
+ * @param {string} path - Path to check.
+ * @returns {Promise<boolean>} Whether the path is to an empty directory.
+ */
 export async function isEmptyDir(path) {
   const dir = await fs.opendir(path);
   try {

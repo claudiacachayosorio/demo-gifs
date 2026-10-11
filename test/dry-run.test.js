@@ -10,9 +10,17 @@ import { fixture, hooks, isEmptyDir, isGIF, run } from "./helpers.js";
 // --- Constants & Helpers ----------------------------------------------------
 
 const defaultLog = `
-    Will generate GIF demo for '${fixture.url}' and save it as '${fixture.gif}'
-  `.trim();
+  Will generate GIF demo for '${fixture.url}' and save it as '${fixture.gif}'
+`.trim();
 
+/**
+ * Verifies output of dry run mode.
+ * @param {string} [flag] - Dry run flag format.
+ * @param {string} dirPath - Output directory path.
+ * @param {string} [outputArg] - Output argument provided to run().
+ * @param {Array} [logs] - Expected dry run output snippets.
+ * @returns {Promise<void>}
+ */
 async function assertLogs({
   flag = "--dry-run",
   dirPath,
