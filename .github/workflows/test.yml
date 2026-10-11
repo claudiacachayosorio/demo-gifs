@@ -27,4 +27,8 @@ jobs:
         run: npm run lint
 
       - name: Run tests
-        run: npm test
+        run: >-
+          node --test
+            test/interface.test.js
+            test/dry-run.test.js
+            test/generator.test.js
